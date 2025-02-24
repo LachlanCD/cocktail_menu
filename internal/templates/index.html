@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe App</title>
+    
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+
+    <h1>Recipe App</h1>
+
+    <!-- Button to load recipes -->
+    <button 
+        hx-get="/recipes"
+        hx-target="#recipe-list"
+        hx-swap="innerHTML">
+        Load Recipes
+    </button>
+
+    <div id="recipe-list">
+        <p>Click the button to see your recipes.</p>
+    </div>
+
+</body>
+</html>
+
