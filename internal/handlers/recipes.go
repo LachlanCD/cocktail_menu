@@ -10,7 +10,7 @@ import (
 )
 
 func GetRecipesHandler(w http.ResponseWriter, r *http.Request) {
-	templ := template.Must(template.ParseFiles("internal/templates/index.html", "internal/templates/card.html"))
+	templ := template.Must(template.ParseFiles("internal/templates/index.html", "internal/templates/nav.html", "internal/templates/card.html"))
 
 	file, err := os.ReadFile("internal/data/recipes.json")
 	if err != nil {
@@ -38,7 +38,7 @@ func GetRecipesHandler(w http.ResponseWriter, r *http.Request) {
 
   err = templ.Execute(w, recipes)
 	if err != nil {
-		http.Error(w, "Could not read recipes", http.StatusInternalServerError)
+		http.Error(w, "Could not load home page", http.StatusInternalServerError)
 		return
 	}
 }
