@@ -5,24 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe App</title>
     
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/output.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
 
-    <h1>Recipe App</h1>
-
-    <!-- Button to load recipes -->
-    <button 
-        hx-get="/recipes"
-        hx-target="#recipe-list"
-        hx-swap="innerHTML">
-        Load Recipes
-    </button>
-
-    <div id="recipe-list">
-        <p>Click the button to see your recipes.</p>
+    <div class="flex justify-center">
+    <div class="p-6 flex flex-wrap mb-4 w-[1350px]">
+      {{range .}}
+      {{ template "card". }}
+      {{end}}
+    </div>
     </div>
 
 </body>

@@ -11,6 +11,7 @@ type Recipe struct {
 	Instructions []string
 	Image        string
 	Source       string
+	Spirit       []string
 }
 
 type RecipeCollection struct {
@@ -18,3 +19,11 @@ type RecipeCollection struct {
 	Name  string
 	Types []Recipe
 }
+
+type HomePageRecipes struct {
+	Index  int
+	Name   string
+	Spirit []string
+	Colour string
+}
+

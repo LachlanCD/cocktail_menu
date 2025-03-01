@@ -1,4 +1,5 @@
-[{
+[
+  {
 		"Index": 1,
 		"Name":  "Daquiri",
     "Types":[
@@ -11,7 +12,80 @@
 				],
 				"Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
 				"Image":        "Daquiri.jpg",
-				"Source":       "test.com"
+				"Source":       "test.com",
+        "Spirit":       ["Rum"]
+			}
+    ]
+	},
+  {
+		"Index": 2,
+		"Name":  "Whiskey Sour",
+    "Types":[
+			{
+				"Name": "Classic",
+				"Ingredients": [
+					{"Name": "Light Rum", "Quantity": 60},
+					{"Name": "Lime Juice", "Quantity": 30},
+					{"Name": "Demerara Syrup", "Quantity": 30}
+				],
+				"Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
+				"Image":        "Daquiri.jpg",
+				"Source":       "test.com",
+        "Spirit":       ["Whiskey", "Congac"]
+			}
+    ]
+	},
+  {
+		"Index": 3,
+		"Name":  "Daquiri",
+    "Types":[
+			{
+				"Name": "Classic",
+				"Ingredients": [
+					{"Name": "Light Rum", "Quantity": 60},
+					{"Name": "Lime Juice", "Quantity": 30},
+					{"Name": "Demerara Syrup", "Quantity": 30}
+				],
+				"Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
+				"Image":        "Daquiri.jpg",
+				"Source":       "test.com",
+        "Spirit":       ["Rum"]
+			}
+    ]
+	},
+  {
+		"Index": 3,
+		"Name":  "Daquiri",
+    "Types":[
+			{
+				"Name": "Classic",
+				"Ingredients": [
+					{"Name": "Light Rum", "Quantity": 60},
+					{"Name": "Lime Juice", "Quantity": 30},
+					{"Name": "Demerara Syrup", "Quantity": 30}
+				],
+				"Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
+				"Image":        "Daquiri.jpg",
+				"Source":       "test.com",
+        "Spirit":       ["Rum"]
+			}
+    ]
+	},
+  {
+		"Index": 4,
+		"Name":  "Whiskey Sour",
+    "Types":[
+			{
+				"Name": "Classic",
+				"Ingredients": [
+					{"Name": "Light Rum", "Quantity": 60},
+					{"Name": "Lime Juice", "Quantity": 30},
+					{"Name": "Demerara Syrup", "Quantity": 30}
+				],
+				"Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
+				"Image":        "Daquiri.jpg",
+				"Source":       "test.com",
+        "Spirit":       ["Whiskey", "Congac"]
 			}
     ]
 	}
