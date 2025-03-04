@@ -26,7 +26,6 @@ func GetHomePageData() ([]models.HomePageRecipes, error) {
 			Index:  val.Index,
 			Name:   val.Name,
 			Spirit: val.Types[0].Spirit,
-			Colour: "gray",
 		}
 
 		recipes = append(recipes, recipe)

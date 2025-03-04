@@ -24,5 +24,4 @@ type HomePageRecipes struct {
 	Index  int
 	Name   string
 	Spirit []string
-	Colour string
 }
