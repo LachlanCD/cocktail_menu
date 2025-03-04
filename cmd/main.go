@@ -13,7 +13,7 @@ func main() {
 	fs := http.FileServer(http.Dir("assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
-	http.HandleFunc("/", handlers.GetRecipesHandler)
+	http.HandleFunc("/", handlers.GetHomeHandler)
 
 	log.Fatal(http.ListenAndServe(":6969", nil))
 }

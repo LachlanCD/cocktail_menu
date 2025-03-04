@@ -26,4 +26,3 @@ type HomePageRecipes struct {
 	Spirit []string
 	Colour string
 }
-
