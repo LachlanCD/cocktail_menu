@@ -9,17 +9,32 @@ import (
 )
 
 func GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
-	templ := template.Must(template.ParseFiles("internal/templates/index.html", "internal/templates/nav.html", "internal/templates/card.html"))
+
+	templ := template.Must(template.ParseFiles(
+		"internal/templates/index.html",
+		"internal/templates/nav.html", 
+		"internal/templates/recipe.html",
+    ))
 
   id, err := strconv.Atoi(r.PathValue("id"))
   if err != nil {
     http.Error(w, "Id must be a number", http.StatusInternalServerError)
+    return
   }
 
   recipe, err := utils.GetRecipeData(id)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
+    return
   }
+
+	if r.Header.Get("HX-Request") != "" {
+		err := templ.ExecuteTemplate(w, "content", recipe)
+		if err != nil {
+			http.Error(w, "Could not load recipe page", http.StatusInternalServerError)
+		}
+		return
+	}
 
   err = templ.Execute(w, recipe)
 	if err != nil {

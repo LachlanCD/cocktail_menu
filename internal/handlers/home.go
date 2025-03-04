@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"text/template"
 
@@ -8,17 +9,29 @@ import (
 )
 
 func GetHomeHandler(w http.ResponseWriter, r *http.Request) {
-	templ := template.Must(template.ParseFiles("internal/templates/index.html", "internal/templates/nav.html", "internal/templates/card.html"))
+	templ := template.Must(template.ParseFiles(
+		"internal/templates/index.html",
+		"internal/templates/nav.html",
+		"internal/templates/home.html"))
 
-  recipes, err := utils.GetHomePageData()
-  if err != nil {
-    http.Error(w, err.Error(), http.StatusInternalServerError)
-  }
+	recipes, err := utils.GetHomePageData()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-  err = templ.Execute(w, recipes)
+	if r.Header.Get("HX-Request") != "" {
+    log.Println("htmx")
+		err := templ.ExecuteTemplate(w, "content", recipes)
+		if err != nil {
+			http.Error(w, "Could not load home page", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	err = templ.ExecuteTemplate(w, "base", recipes)
 	if err != nil {
 		http.Error(w, "Could not load home page", http.StatusInternalServerError)
 		return
 	}
 }
-

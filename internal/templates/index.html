@@ -1,3 +1,4 @@
+{{ define "base" }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,14 +16,10 @@
     <div>
       {{ template "nav". }}
     </div>
-    <div class="flex justify-center">
-      <div class="p-6 flex flex-wrap gap-4 w-full justify-center max-w-[1350px]">
-        {{range .}}
-          {{ template "card". }}
-        {{end}}
-      </div>
+    <div id="page-body">
+      {{ template "content". }}
     </div>
 
 </body>
 </html>
-
+{{end}}
