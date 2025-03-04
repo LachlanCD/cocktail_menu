@@ -14,6 +14,7 @@ func main() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	http.HandleFunc("/", handlers.GetHomeHandler)
+	http.HandleFunc("/recipe/{id}", handlers.GetRecipeHandler)
 
 	log.Fatal(http.ListenAndServe(":6969", nil))
 }
