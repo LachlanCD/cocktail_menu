@@ -8,7 +8,7 @@ import (
 	"github.com/lachlancd/cocktail_menu/internal/models"
 )
 
-func home() ([]models.HomePageRecipes, error) {
+func GetHomePageData() ([]models.HomePageRecipes, error) {
 	var recipes []models.HomePageRecipes
 	var recipeCollection []models.RecipeCollection
 
