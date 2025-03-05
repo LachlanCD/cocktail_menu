@@ -1,6 +1,12 @@
 {{ define "content" }}
-<h1>New Page</h1>
-<p>This is dynamically loaded content.</p>
+<p>{{.Name}}</p>
+  {{ range .Types }}
+    <p>{{.Name}}</p>
+    {{ range .Ingredients }}
+      <p>{{.Name}}</p>
+      <p>{{.Quantity}}</p>
+    {{end}}
+  {{ end }}
 {{ end }}
 
 
