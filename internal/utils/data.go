@@ -8,8 +8,8 @@ import (
 	"github.com/lachlancd/cocktail_menu/internal/models"
 )
 
-func ReadRecipeJson() (*[]models.RecipeCollection, error) {
-	var recipeCollection []models.RecipeCollection
+func ReadRecipeJson() (*[]models.Recipe, error) {
+	var recipeCollection []models.Recipe
 
 	file, err := os.ReadFile("internal/data/recipes.json")
 	if err != nil {
@@ -35,7 +35,7 @@ func GetHomePageData() (*[]models.HomePageRecipes, error) {
 		var recipe = models.HomePageRecipes{
 			Index:  val.Index,
 			Name:   val.Name,
-			Spirit: val.Types[0].Spirit,
+			Spirit: val.Spirit,
 		}
 
 		recipes = append(recipes, recipe)
@@ -44,7 +44,7 @@ func GetHomePageData() (*[]models.HomePageRecipes, error) {
 	return &recipes, nil
 }
 
-func GetRecipeData(index int) (*models.RecipeCollection, error) {
+func GetRecipeData(index int) (*models.Recipe, error) {
   recipeCollections, err := ReadRecipeJson()
   if err != nil {
     return nil, err

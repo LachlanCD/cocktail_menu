@@ -2,22 +2,17 @@ package models
 
 type Ingredient struct {
 	Name     string
-	Quantity int
+	Quantity string
 }
 
 type Recipe struct {
+  Index int
 	Name         string
 	Ingredients  []Ingredient
 	Instructions []string
 	Image        string
 	Source       string
 	Spirit       []string
-}
-
-type RecipeCollection struct {
-	Index int
-	Name  string
-	Types []Recipe
 }
 
 type HomePageRecipes struct {

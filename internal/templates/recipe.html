@@ -1,12 +1,10 @@
 {{ define "content" }}
 <p>{{.Name}}</p>
-  {{ range .Types }}
+  <p>{{.Name}}</p>
+  {{ range .Ingredients }}
     <p>{{.Name}}</p>
-    {{ range .Ingredients }}
-      <p>{{.Name}}</p>
-      <p>{{.Quantity}}</p>
-    {{end}}
-  {{ end }}
+    <p>{{.Quantity}}</p>
+  {{end}}
 {{ end }}
 
 
