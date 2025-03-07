@@ -1,9 +1,32 @@
 {{ define "content" }}
-<p>{{.Name}}</p>
-{{ range .Ingredients }}
-  <p>{{.Name}}</p>
-  <p>{{.Quantity}}</p>
-{{end}}
+  <div class="flex justify-center">
+  <div class="py-2">
+    <div class="p-6 gap-4 justify-center w-750 rounded shadow-lg bg-gray-200">
+        <div class="px-6 py-4">
+          <div class="font-bold text-xl p-2">{{.Name}}</div>
+            <div>
+              <ul class="p-2">
+              {{ range .Ingredients }} 
+                <li>{{.Quantity}}  {{.Name}}</li>
+              {{end}}
+              </ul>
+            </div>
+            <div>
+              <ul class="p-2">
+              {{ range .Instructions }} 
+                <li>{{.}}</li> 
+              {{end}}
+              </ul>
+            </div>
+          </div>
+          <div class="px-8 pb-2">
+            {{range .Spirit }}
+                <span  class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-black mr-2 mb-2">{{.}}</span>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+</div>
 {{ end }}
 
 
