@@ -64,5 +64,18 @@
     "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Rum"]
+	},
+  {
+		"Index": 6,
+		"Name":  "Daquiri",
+    "Ingredients": [
+      {"Name": "Light Rum", "Quantity": "60 ml"},
+      {"Name": "Lime Juice", "Quantity": "30 ml"},
+      {"Name": "Demerara Syrup", "Quantity": "30 ml"}
+    ],
+    "Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
+    "Image":        "Daquiri.jpg",
+    "Source":       "test.com",
+    "Spirit":       ["Rum"]
 	}
 ]
