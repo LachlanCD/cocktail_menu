@@ -1,32 +1,16 @@
 package utils
 
 import (
-	"encoding/json"
 	"errors"
-	"os"
 
 	"github.com/lachlancd/cocktail_menu/internal/models"
+	"github.com/lachlancd/cocktail_menu/internal/db_interactions"
 )
-
-func ReadRecipeJson() (*[]models.Recipe, error) {
-	var recipeCollection []models.Recipe
-
-	file, err := os.ReadFile("internal/data/recipes.json")
-	if err != nil {
-		return nil, errors.New("Could not read recipes")
-	}
-
-	if err := json.Unmarshal(file, &recipeCollection); err != nil {
-		return nil, errors.New("Error parsing recipes")
-	}
-
-  return &recipeCollection, nil
-}
 
 func GetHomePageData() (*[]models.HomePageRecipes, error) {
 	var recipes []models.HomePageRecipes
 
-  recipeCollection, err := ReadRecipeJson()
+  recipeCollection, err := db_interactions.ReadRecipeJson()
   if err != nil {
     return nil, err
   }
@@ -45,7 +29,7 @@ func GetHomePageData() (*[]models.HomePageRecipes, error) {
 }
 
 func GetRecipeData(index int) (*models.Recipe, error) {
-  recipeCollections, err := ReadRecipeJson()
+  recipeCollections, err := db_interactions.ReadRecipeJson()
   if err != nil {
     return nil, err
   }

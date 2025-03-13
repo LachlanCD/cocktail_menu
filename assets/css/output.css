@@ -10,7 +10,6 @@
     --color-gray-800: oklch(0.278 0.033 256.848);
     --color-black: #000;
     --spacing: 0.25rem;
-    --container-md: 28rem;
     --container-7xl: 80rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
@@ -177,20 +176,11 @@
   .mx-auto {
     margin-inline: auto;
   }
-  .mt-4 {
-    margin-top: calc(var(--spacing) * 4);
-  }
-  .mt-10 {
-    margin-top: calc(var(--spacing) * 10);
-  }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
-  }
-  .mb-4 {
-    margin-bottom: calc(var(--spacing) * 4);
   }
   .flex {
     display: flex;
@@ -207,26 +197,8 @@
   .w-1\/2 {
     width: calc(1/2 * 100%);
   }
-  .w-60 {
-    width: calc(var(--spacing) * 60);
-  }
-  .w-100 {
-    width: calc(var(--spacing) * 100);
-  }
-  .w-200 {
-    width: calc(var(--spacing) * 200);
-  }
-  .w-600 {
-    width: calc(var(--spacing) * 600);
-  }
   .w-750 {
     width: calc(var(--spacing) * 750);
-  }
-  .w-1000 {
-    width: calc(var(--spacing) * 1000);
-  }
-  .w-\[750px\] {
-    width: 750px;
   }
   .w-auto {
     width: auto;
@@ -234,38 +206,20 @@
   .w-full {
     width: 100%;
   }
-  .w-md {
-    width: var(--container-md);
-  }
   .max-w-7xl {
     max-width: var(--container-7xl);
   }
   .max-w-60 {
     max-width: calc(var(--spacing) * 60);
   }
-  .max-w-\[750px\] {
-    max-width: 750px;
-  }
   .max-w-\[1350px\] {
     max-width: 1350px;
-  }
-  .max-w-md {
-    max-width: var(--container-md);
-  }
-  .min-w-md {
-    min-width: var(--container-md);
   }
   .flex-1 {
     flex: 1;
   }
   .shrink-0 {
     flex-shrink: 0;
-  }
-  .list-inside {
-    list-style-position: inside;
-  }
-  .list-disc {
-    list-style-type: disc;
   }
   .flex-wrap {
     flex-wrap: wrap;
@@ -321,20 +275,8 @@
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
   }
-  .py-3 {
-    padding-block: calc(var(--spacing) * 3);
-  }
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
-  }
-  .py-5 {
-    padding-block: calc(var(--spacing) * 5);
-  }
-  .py-8 {
-    padding-block: calc(var(--spacing) * 8);
-  }
-  .py-10 {
-    padding-block: calc(var(--spacing) * 10);
   }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
