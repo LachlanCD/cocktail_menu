@@ -10,7 +10,6 @@ type Recipe struct {
 	Name         string
 	Ingredients  []Ingredient
 	Instructions []string
-	Image        string
 	Source       string
 	Spirit       []string
 }

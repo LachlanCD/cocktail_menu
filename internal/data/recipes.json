@@ -8,7 +8,6 @@
       {"Name": "Demerara Syrup", "Quantity": "30 ml"}
     ],
     "Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
-    "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Rum"]
 	},
@@ -22,7 +21,6 @@
       {"Name": "Egg White", "Quantity": "1"}
     ],
     "Instructions": ["Add ingredients to shaker and dry shake to emulsify egg", "add ice and shake", "double strain into a coupe"],
-    "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Whiskey"]
 	},
@@ -35,7 +33,6 @@
       {"Name": "Angostura Bitters", "Quantity": "2-3 dashes"}
     ],
     "Instructions": ["Add ingredients to glass", "stir"],
-    "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Whiskey"]
 	},
@@ -48,7 +45,6 @@
       {"Name": "Demerara Syrup", "Quantity": "30 ml"}
     ],
     "Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
-    "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Rum"]
 	},
@@ -61,7 +57,6 @@
       {"Name": "Demerara Syrup", "Quantity": "30 ml"}
     ],
     "Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
-    "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Rum"]
 	},
@@ -74,7 +69,6 @@
       {"Name": "Demerara Syrup", "Quantity": "30 ml"}
     ],
     "Instructions": ["Add ingredients to shaker and shake", "double strain into a coupe"],
-    "Image":        "Daquiri.jpg",
     "Source":       "test.com",
     "Spirit":       ["Rum"]
 	}
