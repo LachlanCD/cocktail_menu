@@ -29,14 +29,14 @@ func GetHomePageData() (*[]models.HomePageRecipes, error) {
 }
 
 func GetRecipeData(index int) (*models.Recipe, error) {
-  recipeCollections, err := db_interactions.ReadRecipeJson()
+  recipeCollection, err := db_interactions.ReadRecipeJson()
   if err != nil {
     return nil, err
   }
 
-  if index < 1 || index > len(*recipeCollections) {
+  if index < 1 || index > len(*recipeCollection) {
     return nil, errors.New("recipe index out of range")
   }
 
-  return &(*recipeCollections)[index-1], nil
+  return &(*recipeCollection)[index-1], nil
 }
