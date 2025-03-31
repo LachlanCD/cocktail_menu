@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"slices"
-  "fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 
@@ -17,25 +17,58 @@ import (
 // Database file path
 const dbPath = "data/recipes.db"
 
-// initDB initializes the SQLite database and creates the table if it doesn't exist
-func InitDB() *sql.DB {
+func openDB() (*sql.DB, error) {
 	// Open (or create) the SQLite database
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
-		log.Fatalf("Failed to open database: %v", err)
+		return nil, err
 	}
 
-	// Create the recipes table if it doesn't exist
-	query := `CREATE TABLE IF NOT EXISTS recipes (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		name TEXT NOT NULL,
-		ingredients TEXT NOT NULL,
-		instructions TEXT NOT NULL
-	);`
-	_, err = db.Exec(query)
-	if err != nil {
-		log.Fatalf("Failed to create table: %v", err)
+	return db, nil
+}
+
+func createTables(db *sql.DB) {
+	queries := []string{
+		`CREATE TABLE IF NOT EXISTS Recipes (
+			id INTEGER PRIMARY KEY,
+			Name TEXT,
+			Instructions TEXT,
+			Source TEXT
+		);`,
+		`CREATE TABLE IF NOT EXISTS Ingredients (
+			Id INTEGER PRIMARY KEY,
+			RecipeId INTEGER,
+			Name TEXT,
+			Quantity TEXT,
+			FOREIGN KEY (RecipeId) REFERENCES Recipes (id)
+		);`,
+		`CREATE TABLE IF NOT EXISTS Spirits (
+			Id INTEGER PRIMARY KEY,
+			RecipeId INTEGER,
+			Spirit TEXT,
+			FOREIGN KEY (RecipeId) REFERENCES Recipes (id)
+		);`,
 	}
+
+  for _, query := range queries {
+		_, err := db.Exec(query)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+// initDB initializes the SQLite database and creates the table if it doesn't exist
+func InitDB() *sql.DB {
+
+	db, err := openDB()
+  if err != nil {
+		log.Fatal(err)
+	}
+
+  createTables(db)
+
+	defer db.Close()
 
 	fmt.Println("Database initialized successfully.")
 	return db
