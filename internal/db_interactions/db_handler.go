@@ -15,15 +15,10 @@ import (
 )
 
 // Database file path
-const dbPath = "/app/data/recipes.db"
+const dbPath = "data/recipes.db"
 
 // initDB initializes the SQLite database and creates the table if it doesn't exist
-func initDB() *sql.DB {
-	// Ensure the data directory exists
-	if err := os.MkdirAll("/app/data", os.ModePerm); err != nil {
-		log.Fatalf("Failed to create data directory: %v", err)
-	}
-
+func InitDB() *sql.DB {
 	// Open (or create) the SQLite database
 	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {

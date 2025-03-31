@@ -1,5 +1,5 @@
 # Use a minimal Go base image
-FROM golang:1.21 AS builder
+FROM golang:1.22.5 AS builder
 
 # Set working directory
 WORKDIR /app
@@ -24,9 +24,6 @@ WORKDIR /app
 
 # Copy built binary from the builder stage
 COPY --from=builder /app/app .
-
-# Copy SQLite database file if you have a pre-existing one
-COPY recipes.db .
 
 # Run the application
 CMD ["./app"]
