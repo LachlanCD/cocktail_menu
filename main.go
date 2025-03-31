@@ -4,10 +4,12 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/lachlancd/cocktail_menu/internal/db_interactions"
 	"github.com/lachlancd/cocktail_menu/internal/handlers"
 )
 
 func main() {
+  db_interactions.initDB()
 
 	// Serve static assets (CSS, JS, images)
 	fs := http.FileServer(http.Dir("assets"))
