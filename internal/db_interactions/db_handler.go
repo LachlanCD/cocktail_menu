@@ -7,29 +7,43 @@ import (
 	"log"
 	"os"
 	"slices"
+  "fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/lachlancd/cocktail_menu/internal/models"
 )
 
-func initDB() {
-	db, err := sql.Open("sqlite3", "recipes.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+// Database file path
+const dbPath = "/app/data/recipes.db"
 
-	// Create a table if it doesn’t exist
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS recipes (
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        ingredients TEXT,
-        instructions TEXT
-    )`)
-	if err != nil {
-		log.Fatal(err)
+// initDB initializes the SQLite database and creates the table if it doesn't exist
+func initDB() *sql.DB {
+	// Ensure the data directory exists
+	if err := os.MkdirAll("/app/data", os.ModePerm); err != nil {
+		log.Fatalf("Failed to create data directory: %v", err)
 	}
+
+	// Open (or create) the SQLite database
+	db, err := sql.Open("sqlite3", dbPath)
+	if err != nil {
+		log.Fatalf("Failed to open database: %v", err)
+	}
+
+	// Create the recipes table if it doesn't exist
+	query := `CREATE TABLE IF NOT EXISTS recipes (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		ingredients TEXT NOT NULL,
+		instructions TEXT NOT NULL
+	);`
+	_, err = db.Exec(query)
+	if err != nil {
+		log.Fatalf("Failed to create table: %v", err)
+	}
+
+	fmt.Println("Database initialized successfully.")
+	return db
 }
 
 func ReadRecipeJson() (*[]models.Recipe, error) {
@@ -77,11 +91,11 @@ func DeleteRecipeJson(recipe models.Recipe) error {
 		return errors.New("recipe index out of range")
 	}
 
-  *recipeCollection = slices.Delete(*recipeCollection, recipe.Index, recipe.Index + 1)
+	*recipeCollection = slices.Delete(*recipeCollection, recipe.Index, recipe.Index+1)
 
-  for _, r := range (*recipeCollection)[recipe.Index:] {
-    r.Index -= 1
-  }
+	for _, r := range (*recipeCollection)[recipe.Index:] {
+		r.Index -= 1
+	}
 
 	return nil
 }

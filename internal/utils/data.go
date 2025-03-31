@@ -40,3 +40,11 @@ func GetRecipeData(index int) (*models.Recipe, error) {
 
   return &(*recipeCollection)[index-1], nil
 }
+
+func CreateNewRecipe(newRecipe models.Recipe) (error) {
+  if err := db_interactions.AddRecipeJson(newRecipe); err != nil {
+    return err
+  }
+
+  return nil
+}

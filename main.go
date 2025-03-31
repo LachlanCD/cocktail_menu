@@ -9,7 +9,8 @@ import (
 )
 
 func main() {
-  db_interactions.initDB()
+
+  db := db_interactions.initDB()
 
 	// Serve static assets (CSS, JS, images)
 	fs := http.FileServer(http.Dir("assets"))
