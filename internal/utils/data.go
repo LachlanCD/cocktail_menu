@@ -1,16 +1,17 @@
 package utils
 
 import (
+	"database/sql"
 	"errors"
 
-	"github.com/lachlancd/cocktail_menu/internal/models"
 	"github.com/lachlancd/cocktail_menu/internal/db_interactions"
+	"github.com/lachlancd/cocktail_menu/internal/models"
 )
 
-func GetHomePageData() (*[]models.HomePageRecipes, error) {
+func GetHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
 	var recipes []models.HomePageRecipes
 
-  recipeCollection, err := db_interactions.ReadRecipeJson()
+  recipeCollection, err := db_interactions.ReadHomePageData(db)
   if err != nil {
     return nil, err
   }
@@ -28,7 +29,7 @@ func GetHomePageData() (*[]models.HomePageRecipes, error) {
 	return &recipes, nil
 }
 
-func GetRecipeData(index int) (*models.Recipe, error) {
+func GetRecipeData(index int, db *sql.DB) (*models.Recipe, error) {
   recipeCollection, err := db_interactions.ReadRecipeJson()
   if err != nil {
     return nil, err

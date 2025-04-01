@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"slices"
@@ -30,27 +29,33 @@ func openDB() (*sql.DB, error) {
 func createTables(db *sql.DB) {
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS Recipes (
-			id INTEGER PRIMARY KEY,
-			Name TEXT,
-			Instructions TEXT,
-			Source TEXT
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			source TEXT
 		);`,
 		`CREATE TABLE IF NOT EXISTS Ingredients (
-			Id INTEGER PRIMARY KEY,
-			RecipeId INTEGER,
-			Name TEXT,
-			Quantity TEXT,
-			FOREIGN KEY (RecipeId) REFERENCES Recipes (id)
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			recipe_id INTEGER NOT NULL,
+			name TEXT NOT NULL,
+			quantity TEXT NOT NULL,
+			FOREIGN KEY (recipe_id) REFERENCES Recipes (id) ON DELETE CASCADE
 		);`,
-		`CREATE TABLE IF NOT EXISTS Spirits (
-			Id INTEGER PRIMARY KEY,
-			RecipeId INTEGER,
-			Spirit TEXT,
-			FOREIGN KEY (RecipeId) REFERENCES Recipes (id)
+		`CREATE TABLE IF NOT EXISTS Instructions (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			recipe_id INTEGER NOT NULL,
+			step INTEGER NOT NULL,
+			instruction TEXT NOT NULL,
+			FOREIGN KEY (recipe_id) REFERENCES Recipes (id) ON DELETE CASCADE
+		);`,
+		`CREATE TABLE IF NOT EXISTS Base_Spirits (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			recipe_id INTEGER NOT NULL,
+			spirit TEXT NOT NULL,
+			FOREIGN KEY (recipe_id) REFERENCES Recipes (id) ON DELETE CASCADE
 		);`,
 	}
 
-  for _, query := range queries {
+	for _, query := range queries {
 		_, err := db.Exec(query)
 		if err != nil {
 			log.Fatal(err)
@@ -62,16 +67,49 @@ func createTables(db *sql.DB) {
 func InitDB() *sql.DB {
 
 	db, err := openDB()
-  if err != nil {
+	if err != nil {
 		log.Fatal(err)
 	}
 
-  createTables(db)
+	createTables(db)
 
-	defer db.Close()
-
-	fmt.Println("Database initialized successfully.")
 	return db
+}
+
+func ReadHomePageData(db *sql.DB) (*[]models.Recipe, error) {
+	var recipeCollection []models.Recipe
+	recipesMap := make(map[int]*models.Recipe)
+
+	recipes, err := readRecipes(db)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, r := range recipes {
+		recipesMap[r.Index] = r
+	}
+
+	err = readIngredients(db, recipesMap)
+	if err != nil {
+		return nil, err
+	}
+
+	err = readInstructions(db, recipesMap)
+	if err != nil {
+		return nil, err
+	}
+
+	err = readSpirits(db, recipesMap)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert map to slice
+	for _, r := range recipesMap {
+		recipeCollection = append(recipeCollection, *r)
+	}
+
+	return &recipeCollection, nil
 }
 
 func ReadRecipeJson() (*[]models.Recipe, error) {
@@ -123,6 +161,89 @@ func DeleteRecipeJson(recipe models.Recipe) error {
 
 	for _, r := range (*recipeCollection)[recipe.Index:] {
 		r.Index -= 1
+	}
+
+	return nil
+}
+
+func readRecipes(db *sql.DB) ([]*models.Recipe, error) {
+	rows, err := db.Query("SELECT id, name, source FROM recipes")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var recipes []*models.Recipe
+
+	for rows.Next() {
+		r := &models.Recipe{}
+		if err := rows.Scan(&r.Index, &r.Name, &r.Source); err != nil {
+			return nil, err
+		}
+		recipes = append(recipes, r)
+	}
+
+	return recipes, nil
+}
+
+func readIngredients(db *sql.DB, recipesMap map[int]*models.Recipe) error {
+	rows, err := db.Query("SELECT recipe_id, name, quantity FROM ingredients")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var recipeID int
+		ing := models.Ingredient{}
+		if err := rows.Scan(&recipeID, &ing.Name, &ing.Quantity); err != nil {
+			return err
+		}
+		if recipe, exists := recipesMap[recipeID]; exists {
+			recipe.Ingredients = append(recipe.Ingredients, ing)
+		}
+	}
+
+	return nil
+}
+
+func readInstructions(db *sql.DB, recipesMap map[int]*models.Recipe) error {
+	rows, err := db.Query("SELECT recipe_id, instruction FROM instructions ORDER BY step")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var recipeID int
+		var instruction string
+		if err := rows.Scan(&recipeID, &instruction); err != nil {
+			return err
+		}
+		if recipe, exists := recipesMap[recipeID]; exists {
+			recipe.Instructions = append(recipe.Instructions, instruction)
+		}
+	}
+
+	return nil
+}
+
+func readSpirits(db *sql.DB, recipesMap map[int]*models.Recipe) error {
+	rows, err := db.Query("SELECT recipe_id, spirit FROM base_spirits")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var recipeID int
+		var spirit string
+		if err := rows.Scan(&recipeID, &spirit); err != nil {
+			return err
+		}
+		if recipe, exists := recipesMap[recipeID]; exists {
+			recipe.Spirit = append(recipe.Spirit, spirit)
+		}
 	}
 
 	return nil
