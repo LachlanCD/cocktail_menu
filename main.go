@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -14,6 +15,8 @@ func main() {
 
   defer db.Close()
 
+  fmt.Println("initialised")
+
   h := &handlers.Handlers{DB: db}
 
 	// Serve static assets (CSS, JS, images)
@@ -22,6 +25,8 @@ func main() {
 
 	http.HandleFunc("/", h.GetHomeHandler)
 	http.HandleFunc("/recipe/{id}", h.GetRecipeHandler)
+
+  fmt.Println("running")
 
 	log.Fatal(http.ListenAndServe(":6969", nil))
 }
