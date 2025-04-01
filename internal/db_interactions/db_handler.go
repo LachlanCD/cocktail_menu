@@ -8,7 +8,7 @@ import (
 	"os"
 	"slices"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 
 	"github.com/lachlancd/cocktail_menu/internal/models"
 )
@@ -18,7 +18,7 @@ const dbPath = "data/recipes.db"
 
 func openDB() (*sql.DB, error) {
 	// Open (or create) the SQLite database
-	db, err := sql.Open("sqlite3", dbPath)
+	db, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, err
 	}
