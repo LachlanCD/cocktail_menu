@@ -25,10 +25,3 @@ func GetRecipeData(index int, db *sql.DB) (*models.Recipe, error) {
   return recipe, nil
 }
 
-func CreateNewRecipe(newRecipe models.Recipe) (error) {
-  if err := db_interactions.AddRecipeJson(newRecipe); err != nil {
-    return err
-  }
-
-  return nil
-}
