@@ -71,11 +71,11 @@ func createTables(db *sql.DB) {
 func readRecipeByID(db *sql.DB, recipe_id int) (*models.Recipe, error) {
 	row := db.QueryRow("SELECT id, name, source FROM recipes WHERE id = ?", recipe_id)
 
-  recipe := &models.Recipe{}
+	recipe := &models.Recipe{}
 
-  if err := row.Scan(&recipe.Index, &recipe.Name, &recipe.Source); err != nil {
-    return nil, err
-  }
+	if err := row.Scan(&recipe.Index, &recipe.Name, &recipe.Source); err != nil {
+		return nil, err
+	}
 
 	return recipe, nil
 }
@@ -140,7 +140,7 @@ func readInstructions(db *sql.DB, recipe_id int) ([]string, error) {
 }
 
 // readSpirits retrieves all spirits associated with a given recipe ID from the database.
-// 
+//
 // Input:
 // - db: a pointer to an open SQL database connection.
 // - recipe_id: the ID of the recipe whose associated spirits should be retrieved.
@@ -180,31 +180,31 @@ func readSpirits(db *sql.DB, recipe_id int) ([]string, error) {
 // - A slice of pointers to models.HomePageRecipes, each containing the recipe's ID (Index) and name.
 // - An error if the query fails or rows cannot be scanned.
 func readHomeRecipes(db *sql.DB) ([]*models.HomePageRecipes, error) {
-  rows, err := db.Query("SELECT id, name FROM recipes ORDER BY id")
+	rows, err := db.Query("SELECT id, name FROM recipes ORDER BY id")
 	if err != nil {
 		return nil, err
 	}
-  defer rows.Close()
+	defer rows.Close()
 
-  var recipes []*models.HomePageRecipes
+	var recipes []*models.HomePageRecipes
 
-  for rows.Next() {
-    recipe := models.HomePageRecipes{}
-    if err := rows.Scan(&recipe.Index, &recipe.Name); err != nil {
-      return nil, err
-    }
-    recipes = append(recipes, &recipe)
-  }
-  return recipes, nil
+	for rows.Next() {
+		recipe := models.HomePageRecipes{}
+		if err := rows.Scan(&recipe.Index, &recipe.Name); err != nil {
+			return nil, err
+		}
+		recipes = append(recipes, &recipe)
+	}
+	return recipes, nil
 }
 
 // readHomeSpirits retrieves the spirits associated with recipes from the "Base_Spirits" table
 // and appends them to the corresponding recipes in the provided map.
 //
 // Input:
-// - db: a pointer to an open SQL database connection.
-// - recipesMap: a map where keys are recipe IDs and values are pointers to HomePageRecipes
-//   that hold the spirits for each recipe.
+//   - db: a pointer to an open SQL database connection.
+//   - recipesMap: a map where keys are recipe IDs and values are pointers to HomePageRecipes
+//     that hold the spirits for each recipe.
 //
 // Output:
 // - An error if the query fails, or if scanning rows encounters an issue. Returns nil if successful.
@@ -213,21 +213,92 @@ func readHomeRecipes(db *sql.DB) ([]*models.HomePageRecipes, error) {
 // It then checks if the recipe ID exists in the provided recipesMap. If it does, the spirit is appended
 // to the recipe's Spirit slice.
 func readHomeSpirits(db *sql.DB, recipesMap map[int]*models.HomePageRecipes) error {
-  rows, err := db.Query("SELECT recipe_id, spirit FROM Base_Spirits")
-  if err != nil {
-    return err
-  }
-  defer rows.Close()
+	rows, err := db.Query("SELECT recipe_id, spirit FROM Base_Spirits")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
 
-  for rows.Next() {
-    var recipe_id int
-    var spirit string
-    if err := rows.Scan(&recipe_id, &spirit); err != nil {
-      return err
+	for rows.Next() {
+		var recipe_id int
+		var spirit string
+		if err := rows.Scan(&recipe_id, &spirit); err != nil {
+			return err
+		}
+		if recipe, exists := recipesMap[recipe_id]; exists {
+			recipe.Spirit = append(recipe.Spirit, spirit)
+		}
+	}
+	return nil
+}
+
+// addRecipe adds a new recipe along with its ingredients and instructions to the database.
+//
+// Input:
+// - db: a pointer to an open SQL database connection.
+// - recipe: the recipe to be added, including its name, source, ingredients, and instructions.
+//
+// Output:
+// - The ID of the newly created recipe.
+// - An error if the query fails or anything goes wrong during the insertion.
+func addRecipeToDB(db *sql.DB, recipe *models.Recipe) (int64, error) {
+	// Insert the recipe into the 'recipes' table.
+	result, err := db.Exec("INSERT INTO recipes (name, source) VALUES (?, ?)", recipe.Name, recipe.Source)
+	if err != nil {
+		return 0, err
+	}
+
+	// Get the ID of the newly inserted recipe.
+	recipeID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	// Add ingredients to the 'ingredients' table.
+	for _, ingredient := range recipe.Ingredients {
+		_, err := db.Exec("INSERT INTO ingredients (recipe_id, name, quantity) VALUES (?, ?, ?)", recipeID, ingredient.Name, ingredient.Quantity)
+		if err != nil {
+      if err := deleteRecipeFromDB(db, int(recipeID)); err != nil { return 0, err }
+			return 0, err
+		}
+	}
+
+	// Add instructions to the 'instructions' table.
+	for step, instruction := range recipe.Instructions {
+		_, err := db.Exec("INSERT INTO instructions (recipe_id, step, instruction) VALUES (?, ?, ?)", recipeID, step+1, instruction) 
+		if err != nil {
+      if err := deleteRecipeFromDB(db, int(recipeID)); err != nil { return 0, err }
+			return 0, err
+		}
+	}
+
+	// Add spirits to the 'base_spirits' table.
+	for spirit := range recipe.Spirit {
+		_, err := db.Exec("INSERT INTO base_spirits (recipe_id, spirit) VALUES (?, ?, ?)", recipeID, spirit) 
+		if err != nil {
+      if err := deleteRecipeFromDB(db, int(recipeID)); err != nil { return 0, err }
+			return 0, err
+		}
+	}
+
+	return recipeID, nil
+}
+
+// deleteRecipe deletes a recipe from the database based on the provided recipe ID.
+// The related ingredients and instructions will be automatically deleted due to
+// the ON DELETE CASCADE foreign key constraints.
+//
+// Input:
+// - db: a pointer to an open SQL database connection.
+// - recipe_id: the ID of the recipe to be deleted.
+//
+// Output:
+// - An error if the delete query fails.
+func deleteRecipeFromDB(db *sql.DB, recipe_id int) error {
+    _, err := db.Exec("DELETE FROM recipes WHERE id=?", recipe_id)
+    if err != nil {
+        return err 
     }
-    if recipe, exists := recipesMap[recipe_id]; exists {
-      recipe.Spirit = append(recipe.Spirit, spirit)
-    }
-  }
-  return nil
+
+    return nil 
 }

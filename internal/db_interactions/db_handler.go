@@ -35,9 +35,9 @@ func ReadHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
 		recipesMap[r.Index] = r
 	}
 
-  if err := readHomeSpirits(db, recipesMap); err != nil {
-    return nil, err
-  }
+	if err := readHomeSpirits(db, recipesMap); err != nil {
+		return nil, err
+	}
 
 	// Convert map to slice
 	for _, r := range recipesMap {
@@ -48,29 +48,43 @@ func ReadHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
 }
 
 func ReadRecipe(db *sql.DB, recipe_id int) (*models.Recipe, error) {
-  recipe, err := readRecipeByID(db, recipe_id)
-  if err != nil {
-    return nil, err
-  }
+	recipe, err := readRecipeByID(db, recipe_id)
+	if err != nil {
+		return nil, err
+	}
 
-  ingredients, err := readIngredients(db, recipe_id)
-  if err != nil {
-    return nil, err
-  }
-  recipe.Ingredients = ingredients
+	ingredients, err := readIngredients(db, recipe_id)
+	if err != nil {
+		return nil, err
+	}
+	recipe.Ingredients = ingredients
 
-  instructions, err := readInstructions(db, recipe_id)
-  if err != nil {
-    return nil, err
-  }
-  recipe.Instructions = instructions
+	instructions, err := readInstructions(db, recipe_id)
+	if err != nil {
+		return nil, err
+	}
+	recipe.Instructions = instructions
 
-  spirits, err := readSpirits(db, recipe_id)
-  if err != nil {
-    return nil, err
-  }
-  recipe.Spirit = spirits
+	spirits, err := readSpirits(db, recipe_id)
+	if err != nil {
+		return nil, err
+	}
+	recipe.Spirit = spirits
 
-  return recipe, nil
-  
+	return recipe, nil
+}
+
+func AddNewRecipe(db *sql.DB, recipe *models.Recipe) (int, error) {
+  recipe_id, err := addRecipeToDB(db, recipe)
+  if err != nil {
+    return 0, err
+  }
+  return int(recipe_id), nil
+}
+
+func DeleteRecipe(db *sql.DB, recipe_id int) error {
+  if err := deleteRecipeFromDB(db, recipe_id); err != nil {
+    return err
+  }
+  return nil
 }
