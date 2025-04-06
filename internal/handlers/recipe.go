@@ -8,7 +8,7 @@ import (
 	"github.com/lachlancd/cocktail_menu/internal/utils"
 )
 
-func GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
 
 	templ := template.Must(template.ParseFiles(
 		"internal/templates/index.html",
@@ -22,7 +22,7 @@ func GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  recipe, err := utils.GetRecipeData(id)
+  recipe, err := utils.GetRecipeData(id, h.DB)
   if err != nil {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return

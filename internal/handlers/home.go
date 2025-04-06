@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"text/template"
@@ -8,13 +9,17 @@ import (
 	"github.com/lachlancd/cocktail_menu/internal/utils"
 )
 
-func GetHomeHandler(w http.ResponseWriter, r *http.Request) {
+type Handlers struct {
+  DB *sql.DB
+}
+
+func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 	templ := template.Must(template.ParseFiles(
 		"internal/templates/index.html",
 		"internal/templates/nav.html",
 		"internal/templates/home.html"))
 
-	recipes, err := utils.GetHomePageData()
+	recipes, err := utils.GetHomePageData(h.DB)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
