@@ -17,6 +17,8 @@ func InitDB() *sql.DB {
 		log.Fatal(err)
 	}
 
+  enablePragma(db)
+
 	createTables(db)
 
 	return db
@@ -74,17 +76,17 @@ func ReadRecipe(db *sql.DB, recipe_id int) (*models.Recipe, error) {
 	return recipe, nil
 }
 
-func AddNewRecipe(db *sql.DB, recipe *models.Recipe) (int, error) {
-  recipe_id, err := addRecipeToDB(db, recipe)
-  if err != nil {
-    return 0, err
-  }
-  return int(recipe_id), nil
+func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) error {
+	err := addRecipeToDB(db, recipe)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func DeleteRecipe(db *sql.DB, recipe_id int) error {
-  if err := deleteRecipeFromDB(db, recipe_id); err != nil {
-    return err
-  }
-  return nil
+	if err := deleteRecipeFromDB(db, recipe_id); err != nil {
+		return err
+	}
+	return nil
 }

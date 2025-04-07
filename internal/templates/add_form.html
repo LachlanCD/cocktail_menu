@@ -1,0 +1,61 @@
+{{ define "add_form" }}
+<form hx-post="/add-recipe" hx-target="#message" hx-swap="innerHTML">
+  <label>Name: <input type="text" name="name" required></label><br>
+  <label>Source: <input type="text" name="source" required></label><br>
+
+  <h3>Ingredients</h3>
+  <div id="ingredients">
+    <div>
+      <input name="ingredient_name" placeholder="Name" required>
+      <input name="ingredient_quantity" placeholder="Quantity" required>
+    </div>
+  </div>
+
+  <button 
+    type="button" 
+    hx-get="/add-ingredient-field" 
+    hx-target="#ingredients" 
+    hx-swap="beforeend"
+  >
+    Add Ingredient
+  </button>
+
+  <h3>Instructions</h3>
+  <div id="instructions">
+    <div>
+      <input name="instruction" placeholder="Step" required>
+    </div>
+  </div>
+
+  <button 
+    type="button" 
+    hx-get="/add-instruction-field" 
+    hx-target="#instructions" 
+    hx-swap="beforeend"
+  >
+    Add Instruction
+  </button>
+
+  <h3>Base Spirits</h3>
+  <div id="spirits">
+    <div>
+      <input name="spirit" placeholder="Name" required>
+    </div>
+  </div>
+
+  <button 
+    type="button" 
+    hx-get="/add-spirit-field" 
+    hx-target="#spirits" 
+    hx-swap="beforeend"
+  >
+    Add Spirit
+  </button>
+
+  <br><br>
+  <button type="submit">Add Recipe</button>
+</form>
+
+<div id="message"></div>
+
+{{ end }}

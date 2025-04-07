@@ -2,6 +2,7 @@ package db_interactions
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "modernc.org/sqlite"
@@ -22,6 +23,15 @@ func openDB() (*sql.DB, error) {
 	return db, nil
 }
 
+// required for foreign key interactions
+func enablePragma(db *sql.DB) {
+	// Enable foreign key support
+  _, err := db.Exec("PRAGMA foreign_keys = ON;")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func createTables(db *sql.DB) {
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS Recipes (
@@ -34,20 +44,20 @@ func createTables(db *sql.DB) {
 			recipe_id INTEGER NOT NULL,
 			name TEXT NOT NULL,
 			quantity TEXT NOT NULL,
-			FOREIGN KEY (recipe_id) REFERENCES Recipes (id) ON DELETE CASCADE
+			FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 		);`,
 		`CREATE TABLE IF NOT EXISTS Instructions (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			recipe_id INTEGER NOT NULL,
 			step INTEGER NOT NULL,
 			instruction TEXT NOT NULL,
-			FOREIGN KEY (recipe_id) REFERENCES Recipes (id) ON DELETE CASCADE
+			FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 		);`,
 		`CREATE TABLE IF NOT EXISTS Base_Spirits (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			recipe_id INTEGER NOT NULL,
 			spirit TEXT NOT NULL,
-			FOREIGN KEY (recipe_id) REFERENCES Recipes (id) ON DELETE CASCADE
+			FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 		);`,
 	}
 
@@ -239,49 +249,62 @@ func readHomeSpirits(db *sql.DB, recipesMap map[int]*models.HomePageRecipes) err
 // - recipe: the recipe to be added, including its name, source, ingredients, and instructions.
 //
 // Output:
-// - The ID of the newly created recipe.
 // - An error if the query fails or anything goes wrong during the insertion.
-func addRecipeToDB(db *sql.DB, recipe *models.Recipe) (int64, error) {
-	// Insert the recipe into the 'recipes' table.
-	result, err := db.Exec("INSERT INTO recipes (name, source) VALUES (?, ?)", recipe.Name, recipe.Source)
+func addRecipeToDB(db *sql.DB, recipe *models.NewRecipe) error {
+	tx, err := db.Begin()
 	if err != nil {
-		return 0, err
+		return err
+	}
+
+	result, err := tx.Exec("INSERT INTO recipes (name, source) VALUES (?, ?)", recipe.Name, recipe.Source)
+	if err != nil {
+		tx.Rollback()
+		return err
 	}
 
 	// Get the ID of the newly inserted recipe.
 	recipeID, err := result.LastInsertId()
 	if err != nil {
-		return 0, err
-	}
-
-	// Add ingredients to the 'ingredients' table.
-	for _, ingredient := range recipe.Ingredients {
-		_, err := db.Exec("INSERT INTO ingredients (recipe_id, name, quantity) VALUES (?, ?, ?)", recipeID, ingredient.Name, ingredient.Quantity)
-		if err != nil {
-      if err := deleteRecipeFromDB(db, int(recipeID)); err != nil { return 0, err }
-			return 0, err
-		}
+		tx.Rollback()
+		return err
 	}
 
 	// Add instructions to the 'instructions' table.
 	for step, instruction := range recipe.Instructions {
-		_, err := db.Exec("INSERT INTO instructions (recipe_id, step, instruction) VALUES (?, ?, ?)", recipeID, step+1, instruction) 
+		_, err := tx.Exec("INSERT INTO instructions (recipe_id, step, instruction) VALUES (?, ?, ?)", recipeID, step+1, instruction)
 		if err != nil {
-      if err := deleteRecipeFromDB(db, int(recipeID)); err != nil { return 0, err }
-			return 0, err
+			tx.Rollback()
+			return err
 		}
 	}
+	fmt.Println("in instructions")
+
+	// Add ingredients to the 'ingredients' table.
+	for _, ingredient := range recipe.Ingredients {
+		_, err := tx.Exec("INSERT INTO ingredients (recipe_id, name, quantity) VALUES (?, ?, ?)", recipeID, ingredient.Name, ingredient.Quantity)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+	fmt.Println("in ingredients")
 
 	// Add spirits to the 'base_spirits' table.
-	for spirit := range recipe.Spirit {
-		_, err := db.Exec("INSERT INTO base_spirits (recipe_id, spirit) VALUES (?, ?, ?)", recipeID, spirit) 
+	for _, spirit := range recipe.Spirit {
+		fmt.Println(spirit)
+		_, err := tx.Exec("INSERT INTO base_spirits (recipe_id, spirit) VALUES (?, ?)", recipeID, spirit)
 		if err != nil {
-      if err := deleteRecipeFromDB(db, int(recipeID)); err != nil { return 0, err }
-			return 0, err
+			tx.Rollback()
+			return err
 		}
 	}
+	fmt.Println("in spirits")
 
-	return recipeID, nil
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // deleteRecipe deletes a recipe from the database based on the provided recipe ID.
@@ -295,10 +318,10 @@ func addRecipeToDB(db *sql.DB, recipe *models.Recipe) (int64, error) {
 // Output:
 // - An error if the delete query fails.
 func deleteRecipeFromDB(db *sql.DB, recipe_id int) error {
-    _, err := db.Exec("DELETE FROM recipes WHERE id=?", recipe_id)
-    if err != nil {
-        return err 
-    }
+	_, err := db.Exec("DELETE FROM recipes WHERE id=?", recipe_id)
+	if err != nil {
+		return err
+	}
 
-    return nil 
+	return nil
 }

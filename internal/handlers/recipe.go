@@ -13,6 +13,7 @@ func (h *Handlers) GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
 	templ := template.Must(template.ParseFiles(
 		"internal/templates/index.html",
 		"internal/templates/nav.html", 
+		"internal/templates/add_form.html",
 		"internal/templates/recipe.html",
     ))
 
