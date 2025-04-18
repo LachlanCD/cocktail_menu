@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"text/template"
 
@@ -46,11 +45,8 @@ func (h *Handlers) AddRecipeHandler(w http.ResponseWriter, r *http.Request) {
     Spirit: recipe.Spirit,
   }
 
-  fmt.Println(recipeData)
-
 	err = templ.ExecuteTemplate(w, "add_new_response.html", recipeData)
 	if err != nil {
-    fmt.Println(err)
 		http.Error(w, "Could not load home page", http.StatusInternalServerError)
 		return
 	}
