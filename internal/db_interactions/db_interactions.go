@@ -2,7 +2,6 @@ package db_interactions
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	_ "modernc.org/sqlite"
@@ -250,23 +249,23 @@ func readHomeSpirits(db *sql.DB, recipesMap map[int]*models.HomePageRecipes) err
 //
 // Output:
 // - An error if the query fails or anything goes wrong during the insertion.
-func addRecipeToDB(db *sql.DB, recipe *models.NewRecipe) error {
+func addRecipeToDB(db *sql.DB, recipe *models.NewRecipe) (int, error) {
 	tx, err := db.Begin()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	result, err := tx.Exec("INSERT INTO recipes (name, source) VALUES (?, ?)", recipe.Name, recipe.Source)
 	if err != nil {
 		tx.Rollback()
-		return err
+		return 0, err
 	}
 
 	// Get the ID of the newly inserted recipe.
 	recipeID, err := result.LastInsertId()
 	if err != nil {
 		tx.Rollback()
-		return err
+		return 0, err
 	}
 
 	// Add instructions to the 'instructions' table.
@@ -274,37 +273,33 @@ func addRecipeToDB(db *sql.DB, recipe *models.NewRecipe) error {
 		_, err := tx.Exec("INSERT INTO instructions (recipe_id, step, instruction) VALUES (?, ?, ?)", recipeID, step+1, instruction)
 		if err != nil {
 			tx.Rollback()
-			return err
+			return 0, err
 		}
 	}
-	fmt.Println("in instructions")
 
 	// Add ingredients to the 'ingredients' table.
 	for _, ingredient := range recipe.Ingredients {
 		_, err := tx.Exec("INSERT INTO ingredients (recipe_id, name, quantity) VALUES (?, ?, ?)", recipeID, ingredient.Name, ingredient.Quantity)
 		if err != nil {
 			tx.Rollback()
-			return err
+			return 0, err
 		}
 	}
-	fmt.Println("in ingredients")
 
 	// Add spirits to the 'base_spirits' table.
 	for _, spirit := range recipe.Spirit {
-		fmt.Println(spirit)
 		_, err := tx.Exec("INSERT INTO base_spirits (recipe_id, spirit) VALUES (?, ?)", recipeID, spirit)
 		if err != nil {
 			tx.Rollback()
-			return err
+			return 0, err
 		}
 	}
-	fmt.Println("in spirits")
 
 	if err := tx.Commit(); err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return int(recipeID), nil
 }
 
 // deleteRecipe deletes a recipe from the database based on the provided recipe ID.

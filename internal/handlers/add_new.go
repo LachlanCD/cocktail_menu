@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"text/template"
 
 	"github.com/lachlancd/cocktail_menu/internal/models"
 	"github.com/lachlancd/cocktail_menu/internal/utils"
@@ -29,11 +30,30 @@ func (h *Handlers) AddRecipeHandler(w http.ResponseWriter, r *http.Request) {
   }
 
 
-  if err := utils.AddNewRecipe(h.DB, recipe); err != nil {
+  recipeId, err := utils.AddNewRecipe(h.DB, recipe) 
+  if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
   }
 
-  fmt.Println(recipe)
+
+	templ := template.Must(template.ParseFiles(
+		"internal/templates/add_form.html",
+		"internal/templates/add_new_response.html"))
+
+  recipeData := models.HomePageRecipes {
+    Index: recipeId,
+    Name: recipe.Name,
+    Spirit: recipe.Spirit,
+  }
+
+  fmt.Println(recipeData)
+
+	err = templ.ExecuteTemplate(w, "add_new_response.html", recipeData)
+	if err != nil {
+    fmt.Println(err)
+		http.Error(w, "Could not load home page", http.StatusInternalServerError)
+		return
+	}
 }
 
 func getIngredients(names []string, quantities []string) ([]models.Ingredient, error) {
@@ -52,30 +72,28 @@ func getIngredients(names []string, quantities []string) ([]models.Ingredient, e
 }
 
 func AddIngredientFieldHandler(w http.ResponseWriter, r *http.Request) {
-	// Return a fresh set of ingredient input fields
-	html := `
-    <div>
-      <input name="ingredient_name" placeholder="Name">
-      <input name="ingredient_quantity" placeholder="Quantity">
-      <button type="button" onclick="this.parentElement.remove()">Remove</button>
-    </div>`
-	fmt.Fprint(w, html)
+	templ := template.Must(template.ParseFiles("internal/templates/add_ingredient.html"))
+  err := templ.Execute(w, "base")
+	if err != nil {
+		http.Error(w, "Could not load ingredient", http.StatusInternalServerError)
+		return
+	}
 }
 
 func AddInstructionFieldHandler(w http.ResponseWriter, r *http.Request) {
-	html := `
-    <div>
-      <input name="instruction" placeholder="Step">
-      <button type="button" onclick="this.parentElement.remove()">Remove</button>
-    </div>`
-	fmt.Fprint(w, html)
+	templ := template.Must(template.ParseFiles("internal/templates/add_instruction.html"))
+  err := templ.Execute(w, "base")
+	if err != nil {
+		http.Error(w, "Could not load instruction", http.StatusInternalServerError)
+		return
+	}
 }
 
 func AddSpiritFieldHandler(w http.ResponseWriter, r *http.Request) {
-	html := `
-    <div>
-      <input name="spirit" placeholder="Name">
-      <button type="button" onclick="this.parentElement.remove()">Remove</button>
-    </div>`
-	fmt.Fprint(w, html)
+	templ := template.Must(template.ParseFiles("internal/templates/add_spirit.html"))
+  err := templ.Execute(w, "base")
+	if err != nil {
+		http.Error(w, "Could not load instruction", http.StatusInternalServerError)
+		return
+	}
 }

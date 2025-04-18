@@ -76,12 +76,12 @@ func ReadRecipe(db *sql.DB, recipe_id int) (*models.Recipe, error) {
 	return recipe, nil
 }
 
-func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) error {
-	err := addRecipeToDB(db, recipe)
+func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) (int, error) {
+	recipeId, err := addRecipeToDB(db, recipe)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return recipeId, err
 }
 
 func DeleteRecipe(db *sql.DB, recipe_id int) error {

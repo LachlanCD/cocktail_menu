@@ -25,13 +25,13 @@ func GetRecipeData(index int, db *sql.DB) (*models.Recipe, error) {
 	return recipe, nil
 }
 
-func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) (error) {
-	err := db_interactions.AddNewRecipe(db, recipe)
+func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) (int, error) {
+	recipeId, err := db_interactions.AddNewRecipe(db, recipe)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return recipeId, nil
 }
 
 func DeleteRecipe(db *sql.DB, recipe_id int) error {
