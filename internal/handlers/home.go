@@ -17,6 +17,7 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 	templ := template.Must(template.ParseFiles(
 		"internal/templates/index.html",
 		"internal/templates/nav.html",
+		"internal/templates/add_form.html",
 		"internal/templates/home.html"))
 
 	recipes, err := utils.GetHomePageData(h.DB)

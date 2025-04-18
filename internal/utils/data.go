@@ -8,27 +8,36 @@ import (
 )
 
 func GetHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
-  recipes, err := db_interactions.ReadHomePageData(db)
-  if err != nil {
-    return nil, err
-  }
+	recipes, err := db_interactions.ReadHomePageData(db)
+	if err != nil {
+		return nil, err
+	}
 
 	return recipes, nil
 }
 
 func GetRecipeData(index int, db *sql.DB) (*models.Recipe, error) {
-  recipe, err := db_interactions.ReadRecipe(db, index)
-  if err != nil {
-    return nil, err
-  }
+	recipe, err := db_interactions.ReadRecipe(db, index)
+	if err != nil {
+		return nil, err
+	}
 
-  return recipe, nil
+	return recipe, nil
 }
 
-func CreateNewRecipe(newRecipe models.Recipe) (error) {
-  if err := db_interactions.AddRecipeJson(newRecipe); err != nil {
-    return err
-  }
+func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) (int, error) {
+	recipeId, err := db_interactions.AddNewRecipe(db, recipe)
+	if err != nil {
+		return 0, err
+	}
 
-  return nil
+	return recipeId, nil
+}
+
+func DeleteRecipe(db *sql.DB, recipe_id int) error {
+	if err := db_interactions.DeleteRecipe(db, recipe_id); err != nil {
+		return err
+	}
+
+	return nil
 }
