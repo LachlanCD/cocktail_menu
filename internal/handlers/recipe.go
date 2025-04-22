@@ -15,6 +15,7 @@ func (h *Handlers) GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
 		"internal/templates/nav.html", 
 		"internal/templates/add_form.html",
 		"internal/templates/recipe.html",
+		"internal/templates/remove_button.html",
     ))
 
   id, err := strconv.Atoi(r.PathValue("id"))
