@@ -355,6 +355,12 @@
   .w-200 {
     width: calc(var(--spacing) * 200);
   }
+  .w-\[36px\] {
+    width: 36px;
+  }
+  .w-\[97\.5px\] {
+    width: 97.5px;
+  }
   .w-\[120px\] {
     width: 120px;
   }

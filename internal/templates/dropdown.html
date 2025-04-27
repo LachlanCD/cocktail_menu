@@ -11,9 +11,9 @@
         <!-- Dropdown panel, show/hide based on dropdown state. -->
         <div class="absolute mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden" id="dropdown-menu">
           <div class="py-1" role="none">
-            <a href="/" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">No Filter</a>
+            <a href="/" class="text-gray-700 block px-5 py-2 text-sm hover:bg-gray-100" role="menuitem">No Filter</a>
             {{range .Spirits }}
-              <a href="/spirit-filter/{{.}}" hx-get="spirit-filter/{{.}}" hx-target="#page-body" hx-swap="innerHTML" class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100" role="menuitem">{{.}}</a>
+              <a href="/spirit-filter/{{.}}" hx-get="spirit-filter/{{.}}" hx-target="#page-body" hx-swap="innerHTML" class="text-gray-700 block px-5 py-2 text-sm hover:bg-gray-100" role="menuitem">{{.}}</a>
             {{ end }}
           </div>
         </div>
@@ -24,6 +24,17 @@
   // Directly reference the button and menu inside the event listener
   document.querySelector('button').addEventListener('click', function() {
     document.getElementById('dropdown-menu').classList.toggle('hidden');  // Toggle visibility
+  });
+
+  // Close the dropdown if the user clicks outside of it
+  document.addEventListener('click', function(event) {
+    let button = document.querySelector('button');
+    let menu = document.getElementById('dropdown-menu');
+    
+    // Check if the click was outside the button or the dropdown menu
+    if (!button.contains(event.target) && !menu.contains(event.target)) {
+      menu.classList.add('hidden');
+    }
   });
 </script>
 {{ end }} 
