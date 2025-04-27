@@ -16,6 +16,15 @@ func GetHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
 	return recipes, nil
 }
 
+func GetSpiritFilterData(db *sql.DB, spirit string) (*[]models.HomePageRecipes, error) {
+	recipes, err := db_interactions.ReadHomePageData(db, "spirit", spirit)
+	if err != nil {
+		return nil, err
+	}
+
+	return recipes, nil
+}
+
 func GetRecipeData(index int, db *sql.DB) (*models.Recipe, error) {
 	recipe, err := db_interactions.ReadRecipe(db, index)
 	if err != nil {
@@ -40,4 +49,8 @@ func DeleteRecipe(db *sql.DB, recipe_id int) error {
 	}
 
 	return nil
+}
+
+func GetUniqueSpirits(db *sql.DB) ([]string, error) {
+  return db_interactions.ReadSpirits(db) 
 }

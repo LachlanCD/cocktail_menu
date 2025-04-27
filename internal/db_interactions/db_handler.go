@@ -24,6 +24,10 @@ func InitDB() *sql.DB {
 	return db
 }
 
+func ReadSpirits(db *sql.DB) ([]string, error){
+  return readUniqueSpirits(db)
+}
+
 func ReadHomePageData(db *sql.DB, filterType string, filter string) (*[]models.HomePageRecipes, error) {
 	var recipeCollection *[]models.HomePageRecipes
   var err error
