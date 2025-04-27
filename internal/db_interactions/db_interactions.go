@@ -241,6 +241,25 @@ func readHomeSpirits(db *sql.DB, recipesMap map[int]*models.HomePageRecipes) err
 	return nil
 }
 
+func filterSpirits(db *sql.DB, spirit string) ([]*models.HomePageRecipes, error) {
+  rows, err := db.Query("select recipes.id, recipes.name from recipes inner join base_spirits on recipes.id=base_spirits.recipe_id and base_spirits.spirit='?'", spirit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+  
+	var recipes []*models.HomePageRecipes
+
+	for rows.Next() {
+		recipe := models.HomePageRecipes{}
+		if err := rows.Scan(&recipe.Index, &recipe.Name); err != nil {
+			return nil, err
+		}
+		recipes = append(recipes, &recipe)
+	}
+	return recipes, nil
+}
+
 // addRecipe adds a new recipe along with its ingredients and instructions to the database.
 //
 // Input:

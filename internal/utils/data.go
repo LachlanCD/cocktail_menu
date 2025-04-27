@@ -8,7 +8,7 @@ import (
 )
 
 func GetHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
-	recipes, err := db_interactions.ReadHomePageData(db)
+	recipes, err := db_interactions.ReadHomePageData(db, "", "")
 	if err != nil {
 		return nil, err
 	}
