@@ -35,9 +35,7 @@ func (h *Handlers) AddRecipeHandler(w http.ResponseWriter, r *http.Request) {
   }
 
 
-	templ := template.Must(template.ParseFiles(
-		"internal/templates/add_form.html",
-		"internal/templates/add_new_response.html"))
+	templ := template.Must(template.ParseFiles("internal/templates/add_new_response.html"))
 
   recipeData := models.HomePageRecipes {
     Index: recipeId,

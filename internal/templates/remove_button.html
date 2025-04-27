@@ -1,0 +1,9 @@
+{{ define "remove_button" }}
+<div class="flex justify-center">
+  <a href="/remove-recipe/{{.Index}}" hx-get="remove-recipe/{{.Index}}" hx-target="#page-body" hx-swap="innerHTML">  
+    <div class="px-8 py-4">
+      <div class="font-bold text-xl mb-2">X</div>
+    </div>
+  </a>
+</div>
+{{ end }}
