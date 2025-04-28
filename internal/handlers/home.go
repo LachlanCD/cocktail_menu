@@ -19,6 +19,7 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 		"internal/templates/nav.html",
 		"internal/templates/add_form.html",
 		"internal/templates/dropdown.html",
+		"internal/templates/searchbar.html",
 		"internal/templates/home.html"))
 
 	recipes, err := utils.GetHomePageData(h.DB)

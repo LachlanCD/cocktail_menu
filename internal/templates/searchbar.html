@@ -1,0 +1,13 @@
+{{ define "search_bar" }}
+<div class="w-full flex justify-center">
+  <input 
+    type="text" 
+    name="search" 
+    placeholder="Search recipes..." 
+    class="w-full p-2 border rounded-xl" 
+    hx-get="/search" 
+    hx-target="#page-body" 
+    hx-trigger="keyup changed delay:300ms"
+  />
+</div>
+{{ end }}

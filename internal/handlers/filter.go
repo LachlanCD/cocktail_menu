@@ -14,6 +14,7 @@ func (h *Handlers) GetFilteredSpiritsHandler(w http.ResponseWriter, r *http.Requ
 		"internal/templates/nav.html",
 		"internal/templates/add_form.html",
 		"internal/templates/dropdown.html",
+		"internal/templates/searchbar.html",
 		"internal/templates/home.html"))
 
   spirit := r.PathValue("spirit")

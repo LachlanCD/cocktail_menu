@@ -14,6 +14,7 @@ func (h *Handlers) GetSearchResultsHandler(w http.ResponseWriter, r *http.Reques
 		"internal/templates/nav.html",
 		"internal/templates/add_form.html",
 		"internal/templates/dropdown.html",
+		"internal/templates/searchbar.html",
 		"internal/templates/home.html"))
 
 	search := r.URL.Query().Get("search")
