@@ -29,28 +29,20 @@ func ReadSpirits(db *sql.DB) ([]string, error){
 }
 
 func ReadHomePageData(db *sql.DB, filterType string, filter string) (*[]models.HomePageRecipes, error) {
-	var recipeCollection *[]models.HomePageRecipes
+	var recipeCollection []models.HomePageRecipes
+  var recipes []*models.HomePageRecipes
   var err error
+	recipesMap := make(map[int]*models.HomePageRecipes)
+
   switch filterType {
     case "spirit":
-      recipeCollection, err = readSpiritFilterHomeData(db, filter)
-      if err != nil {
-        return nil, err
-      }
+	    recipes, err = filterSpirits(db, filter)
+    case "search":
+	    recipes, err = searchRecipes(db, filter)
     default:
-      recipeCollection, err = readDefaultHomeData(db)
-      if err != nil {
-        return nil, err
-      }
+	    recipes, err = readHomeRecipes(db)
   }
-  return recipeCollection, nil
-}
 
-func readDefaultHomeData(db *sql.DB) (*[]models.HomePageRecipes, error) {
-	var recipeCollection []models.HomePageRecipes
-	recipesMap := make(map[int]*models.HomePageRecipes)
-
-	recipes, err := readHomeRecipes(db)
 	if err != nil {
 		return nil, err
 	}
@@ -70,32 +62,6 @@ func readDefaultHomeData(db *sql.DB) (*[]models.HomePageRecipes, error) {
 
 	return &recipeCollection, nil
 }
-
-func readSpiritFilterHomeData(db *sql.DB, spirit string) (*[]models.HomePageRecipes, error) {
-	var recipeCollection []models.HomePageRecipes
-	recipesMap := make(map[int]*models.HomePageRecipes)
-
-	recipes, err := filterSpirits(db, spirit)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, r := range recipes {
-		recipesMap[r.Index] = r
-	}
-
-	if err := readHomeSpirits(db, recipesMap); err != nil {
-		return nil, err
-	}
-
-	// Convert map to slice
-	for _, r := range recipesMap {
-		recipeCollection = append(recipeCollection, *r)
-	}
-
-	return &recipeCollection, nil
-}
-
 
 func ReadRecipe(db *sql.DB, recipe_id int) (*models.Recipe, error) {
 	recipe, err := readRecipeByID(db, recipe_id)
