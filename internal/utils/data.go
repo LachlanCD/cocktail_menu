@@ -25,6 +25,15 @@ func GetSpiritFilterData(db *sql.DB, spirit string) (*[]models.HomePageRecipes, 
 	return recipes, nil
 }
 
+func GetRecipeSearchData(db *sql.DB, search string) (*[]models.HomePageRecipes, error) {
+	recipes, err := db_interactions.ReadHomePageData(db, "search", search)
+	if err != nil {
+		return nil, err
+	}
+
+	return recipes, nil
+}
+
 func GetRecipeData(index int, db *sql.DB) (*models.Recipe, error) {
 	recipe, err := db_interactions.ReadRecipe(db, index)
 	if err != nil {
