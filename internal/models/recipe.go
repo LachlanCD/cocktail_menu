@@ -27,3 +27,8 @@ type HomePageRecipes struct {
 	Name   string
 	Spirit []string
 }
+
+type HomePageData struct {
+  Spirits []string
+  Recipes []HomePageRecipes
+}

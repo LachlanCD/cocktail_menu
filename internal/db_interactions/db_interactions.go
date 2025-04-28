@@ -180,16 +180,15 @@ func readSpirits(db *sql.DB, recipe_id int) ([]string, error) {
 	return spirits, nil
 }
 
-// readHomeRecipes retrieves all recipes from the database.
-//
-// Input:
-// - db: a pointer to an open SQL database connection.
-//
-// Output:
-// - A slice of pointers to models.HomePageRecipes, each containing the recipe's ID (Index) and name.
-// - An error if the query fails or rows cannot be scanned.
-func readHomeRecipes(db *sql.DB) ([]*models.HomePageRecipes, error) {
-	rows, err := db.Query("SELECT id, name FROM recipes ORDER BY id")
+func readDB(db *sql.DB, query string, input *string) (*sql.Rows, error) {
+  if input != nil {
+    return db.Query(query, input)
+  }
+  return db.Query(query)
+}
+
+func processHomeRecipies(db *sql.DB, query string, input *string) ([]*models.HomePageRecipes, error) {
+  rows, err := readDB(db, query, input)
 	if err != nil {
 		return nil, err
 	}
@@ -207,6 +206,34 @@ func readHomeRecipes(db *sql.DB) ([]*models.HomePageRecipes, error) {
 	return recipes, nil
 }
 
+// readHomeRecipes retrieves all recipes from the database.
+//
+// Input:
+// - db: a pointer to an open SQL database connection.
+//
+// Output:
+// - A slice of pointers to models.HomePageRecipes, each containing the recipe's ID (Index) and name.
+// - An error if the query fails or rows cannot be scanned.
+func readHomeRecipes(db *sql.DB) ([]*models.HomePageRecipes, error) {
+  var inputPtr *string
+  query := "SELECT id, name FROM recipes ORDER BY id"
+  return processHomeRecipies(db, query, inputPtr)
+}
+
+
+func filterSpirits(db *sql.DB, spirit string) ([]*models.HomePageRecipes, error) {
+  inputPtr := &spirit
+  query := "SELECT recipes.id, recipes.name FROM recipes INNER JOIN base_spirits ON recipes.id=base_spirits.recipe_id AND base_spirits.spirit=?"
+  return processHomeRecipies(db, query, inputPtr)
+}
+
+func searchRecipes(db *sql.DB, search string) ([]*models.HomePageRecipes, error) {
+  searchPattern := search + "%"
+  inputPtr := &searchPattern
+  query := "SELECT id, name FROM recipes WHERE name LIKE ?"
+  return processHomeRecipies(db, query, inputPtr)
+}
+
 // readHomeSpirits retrieves the spirits associated with recipes from the "Base_Spirits" table
 // and appends them to the corresponding recipes in the provided map.
 //
@@ -222,23 +249,42 @@ func readHomeRecipes(db *sql.DB) ([]*models.HomePageRecipes, error) {
 // It then checks if the recipe ID exists in the provided recipesMap. If it does, the spirit is appended
 // to the recipe's Spirit slice.
 func readHomeSpirits(db *sql.DB, recipesMap map[int]*models.HomePageRecipes) error {
-	rows, err := db.Query("SELECT recipe_id, spirit FROM Base_Spirits")
+  rows, err := db.Query("SELECT recipe_id, spirit FROM Base_Spirits")
+  if err != nil {
+    return err
+  }
+  defer rows.Close()
+
+  for rows.Next() {
+    var recipe_id int
+    var spirit string
+    if err := rows.Scan(&recipe_id, &spirit); err != nil {
+      return err
+    }
+    if recipe, exists := recipesMap[recipe_id]; exists {
+      recipe.Spirit = append(recipe.Spirit, spirit)
+    }
+  }
+  return nil
+}
+
+func readUniqueSpirits(db *sql.DB) ([]string, error) {
+  rows, err := db.Query("SELECT DISTINCT spirit FROM base_spirits")
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer rows.Close()
 
-	for rows.Next() {
-		var recipe_id int
-		var spirit string
-		if err := rows.Scan(&recipe_id, &spirit); err != nil {
-			return err
-		}
-		if recipe, exists := recipesMap[recipe_id]; exists {
-			recipe.Spirit = append(recipe.Spirit, spirit)
-		}
-	}
-	return nil
+  var spirits []string
+  for rows.Next() {
+    var spirit string
+    if err := rows.Scan(&spirit); err != nil {
+      return nil, err
+    }
+    spirits = append(spirits, spirit)
+  }
+  return spirits, nil
+  
 }
 
 // addRecipe adds a new recipe along with its ingredients and instructions to the database.

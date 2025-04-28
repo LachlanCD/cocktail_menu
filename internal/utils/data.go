@@ -8,7 +8,25 @@ import (
 )
 
 func GetHomePageData(db *sql.DB) (*[]models.HomePageRecipes, error) {
-	recipes, err := db_interactions.ReadHomePageData(db)
+	recipes, err := db_interactions.ReadHomePageData(db, "", "")
+	if err != nil {
+		return nil, err
+	}
+
+	return recipes, nil
+}
+
+func GetSpiritFilterData(db *sql.DB, spirit string) (*[]models.HomePageRecipes, error) {
+	recipes, err := db_interactions.ReadHomePageData(db, "spirit", spirit)
+	if err != nil {
+		return nil, err
+	}
+
+	return recipes, nil
+}
+
+func GetRecipeSearchData(db *sql.DB, search string) (*[]models.HomePageRecipes, error) {
+	recipes, err := db_interactions.ReadHomePageData(db, "search", search)
 	if err != nil {
 		return nil, err
 	}
@@ -40,4 +58,8 @@ func DeleteRecipe(db *sql.DB, recipe_id int) error {
 	}
 
 	return nil
+}
+
+func GetUniqueSpirits(db *sql.DB) ([]string, error) {
+  return db_interactions.ReadSpirits(db) 
 }

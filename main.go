@@ -24,6 +24,8 @@ func main() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
 	http.HandleFunc("/", h.GetHomeHandler)
+	http.HandleFunc("/spirit-filter/{spirit}", h.GetFilteredSpiritsHandler)
+	http.HandleFunc("/search", h.GetSearchResultsHandler)
 	http.HandleFunc("/recipe/{id}", h.GetRecipeHandler)
 	http.HandleFunc("/add-recipe", h.AddRecipeHandler)
   http.HandleFunc("/remove-recipe/{id}", h.RemoveRecipeHandler)

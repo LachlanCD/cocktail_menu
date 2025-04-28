@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 	"text/template"
 
@@ -9,11 +8,7 @@ import (
 	"github.com/lachlancd/cocktail_menu/internal/utils"
 )
 
-type Handlers struct {
-  DB *sql.DB
-}
-
-func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) GetSearchResultsHandler(w http.ResponseWriter, r *http.Request) {
 	templ := template.Must(template.ParseFiles(
 		"internal/templates/index.html",
 		"internal/templates/nav.html",
@@ -22,22 +17,24 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 		"internal/templates/searchbar.html",
 		"internal/templates/home.html"))
 
-	recipes, err := utils.GetHomePageData(h.DB)
+	search := r.URL.Query().Get("search")
+
+	recipes, err := utils.GetRecipeSearchData(h.DB, search)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-  spirits, err := utils.GetUniqueSpirits(h.DB)
+	spirits, err := utils.GetUniqueSpirits(h.DB)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-  data := &models.HomePageData{
-    Spirits: spirits,
-    Recipes: *recipes,
-  }
+	data := &models.HomePageData{
+		Spirits: spirits,
+		Recipes: *recipes,
+	}
 
 	if r.Header.Get("HX-Request") != "" {
 		err := templ.ExecuteTemplate(w, "content", data)
