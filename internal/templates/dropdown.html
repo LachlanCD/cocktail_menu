@@ -11,7 +11,7 @@
         <!-- Dropdown panel, show/hide based on dropdown state. -->
         <div class="absolute mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 hidden" id="dropdown-menu">
           <div class="py-1" role="none">
-            <a href="/" class="text-gray-700 block px-5 py-2 text-sm hover:bg-gray-100" role="menuitem">No Filter</a>
+            <a href="/" hx-get="/" hx-target="#page-body" hx-swap="innerHTML" class="text-gray-700 block px-5 py-2 text-sm hover:bg-gray-100" role="menuitem">No Filter</a>
             {{range .Spirits }}
               <a href="/spirit-filter/{{.}}" hx-get="spirit-filter/{{.}}" hx-target="#page-body" hx-swap="innerHTML" class="text-gray-700 block px-5 py-2 text-sm hover:bg-gray-100" role="menuitem">{{.}}</a>
             {{ end }}

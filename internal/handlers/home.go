@@ -38,6 +38,14 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
     Recipes: *recipes,
   }
 
+	if r.Header.Get("HX-Request") != "" {
+		err := templ.ExecuteTemplate(w, "content", data)
+		if err != nil {
+			http.Error(w, "Could not load home page", http.StatusInternalServerError)
+		}
+		return
+	}
+
 	err = templ.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		http.Error(w, "Could not load home page", http.StatusInternalServerError)
