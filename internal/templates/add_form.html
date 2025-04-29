@@ -14,7 +14,12 @@
 <div id="popup" class="fixed inset-0 bg-black/25 flex justify-center items-center z-50" style="display:none;">
   <div class="bg-white p-6 rounded-lg w-96 max-w-full">
     <h2 class="text-xl font-semibold mb-4">Add a New Recipe</h2>
-    <form hx-post="/add-recipe" hx-target="#add-form" hx-swap="outerHTML" hx-on::after-request="if(event.detail.successful) {this.reset(); closePopUp();}">
+    <form 
+      id="new-form"
+      hx-post="/add-recipe" 
+      hx-target="#add-form" 
+      hx-swap="outerHTML" 
+      hx-on::after-request="if(event.detail.successful && event.target.id === 'new-form') {this.reset();closePopUp();}">
         <label class="block mb-1">Name: <input type="text" name="name" required class="border border-gray-300 rounded px-4 py-2 mb-4 w-full" /></label>
         <label class="block mb-1">Source: <input type="text" name="source" required class="border border-gray-300 rounded px-4 py-2 mb-4 w-full" /></label>
 
