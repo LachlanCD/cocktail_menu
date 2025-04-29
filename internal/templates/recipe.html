@@ -29,11 +29,15 @@
     </div>
   </div>
 </div>
-<div>
-{{ template "remove_button". }}
-</div>
-<div>
-{{ template "edit_button". }}
+<div class="flex justify-center">
+  <div class="p-6 flex flex-wrap gap-4 w-full justify-center max-w-[1350px]">
+    <div class="w-1/3">
+    {{ template "remove_button". }}
+    </div>
+    <div class="w-1/3">
+    {{ template "edit_button". }}
+    </div>
+  </div>
 </div>
 {{ end }}
 

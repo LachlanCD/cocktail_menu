@@ -4,10 +4,11 @@
     hx-get="edit-recipe-form/{{.Index}}" 
     hx-target="#page-body" 
     hx-swap="innerHTML"
+    class="p-2 rounded hover:bg-gray-100"
   >  
-    <div class="px-8 py-4">
-      <div class="font-bold text-xl mb-2">X</div>
-    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.862 3.487a2.25 2.25 0 113.182 3.182l-9.5 9.5a2.25 2.25 0 01-.878.562l-3.682 1.227 1.227-3.682a2.25 2.25 0 01.562-.878l9.5-9.5z" />
+    </svg>
   </a>
 </div>
 {{ end }}
