@@ -388,9 +388,8 @@ func addSpirits(tx *sql.Tx, recipe_id int, spirits []string) error {
 	return nil
 }
 
-func deleteFromDB(exec Execer, table string, field string, id int) error {
-	query := "DELETE FROM ? WHERE ? = ?"
-	_, err := exec.Exec(query, table, field, id)
+func deleteFromDB(exec Execer, query string, id int) error {
+	_, err := exec.Exec(query, id)
 	return err
 }
 
@@ -405,9 +404,8 @@ func deleteFromDB(exec Execer, table string, field string, id int) error {
 // Output:
 // - An error if the delete query fails.
 func deleteRecipeFromDB(db *sql.DB, recipe_id int) error {
-	table := "recipes"
-	field := "id"
-	return deleteFromDB(db, table, field, recipe_id)
+	query := "DELETE FROM recipes WHERE id=?"
+	return deleteFromDB(db, query, recipe_id)
 }
 
 func editRecipe(db *sql.DB, newRecipe *models.Recipe, recipe bool, ingredients bool, instructions bool, spirits bool) error {
@@ -451,7 +449,8 @@ func updateRecipe(tx *sql.Tx, recipe_id int, name string, source string) error {
 }
 
 func updateIngredients(tx *sql.Tx, recipe_id int, ingredients []models.Ingredient) error {
-  if err := deleteFromDB(tx, "ingredients", "recipe_id", recipe_id); err != nil {
+	query := "DELETE FROM ingredients WHERE recipe_id=?"
+  if err := deleteFromDB(tx, query, recipe_id); err != nil {
     return err
   }
   if err := addIngredients(tx, recipe_id, ingredients); err != nil {
@@ -461,7 +460,8 @@ func updateIngredients(tx *sql.Tx, recipe_id int, ingredients []models.Ingredien
 }
 
 func updateInstructions(tx *sql.Tx, recipe_id int, instructions []string) error {
-  if err := deleteFromDB(tx, "instructions", "recipe_id", recipe_id); err != nil {
+	query := "DELETE FROM instructions WHERE recipe_id=?"
+  if err := deleteFromDB(tx, query, recipe_id); err != nil {
     return err
   }
   if err := addInstructions(tx, recipe_id, instructions); err != nil {
@@ -471,7 +471,8 @@ func updateInstructions(tx *sql.Tx, recipe_id int, instructions []string) error 
 }
 
 func updateSpirits(tx *sql.Tx, recipe_id int, spirits []string) error {
-  if err := deleteFromDB(tx, "base_spirits", "recipe_id", recipe_id); err != nil {
+	query := "DELETE FROM base_spirits WHERE recipe_id=?"
+  if err := deleteFromDB(tx, query, recipe_id); err != nil {
     return err
   }
   if err := addSpirits(tx, recipe_id, spirits); err != nil {
