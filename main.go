@@ -37,5 +37,5 @@ func main() {
 
 	fmt.Println("running")
 
-	log.Fatal(http.ListenAndServe(":6969", nil))
+	log.Fatal(http.ListenAndServe(":4000", nil))
 }
