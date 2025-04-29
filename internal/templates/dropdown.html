@@ -30,7 +30,9 @@
   document.addEventListener('click', function(event) {
     let button = document.querySelector('button');
     let menu = document.getElementById('dropdown-menu');
-    
+   
+    if (!button || !menu) return;
+
     // Check if the click was outside the button or the dropdown menu
     if (!button.contains(event.target) && !menu.contains(event.target)) {
       menu.classList.add('hidden');
