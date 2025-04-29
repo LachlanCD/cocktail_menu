@@ -117,13 +117,13 @@ func EditRecipe(db *sql.DB, newRecipe *models.Recipe) error {
   if (oldRecipe.Name != newRecipe.Name || oldRecipe.Source != newRecipe.Source) {
     recipe = true
   }
-  if reflect.DeepEqual(oldRecipe.Ingredients, newRecipe.Ingredients) {
+  if !reflect.DeepEqual(oldRecipe.Ingredients, newRecipe.Ingredients) {
     ingredients = true
   }
-  if reflect.DeepEqual(oldRecipe.Instructions, newRecipe.Instructions) {
+  if !reflect.DeepEqual(oldRecipe.Instructions, newRecipe.Instructions) {
     instructions = true
   }
-  if reflect.DeepEqual(oldRecipe.Spirit, newRecipe.Spirit) {
+  if !reflect.DeepEqual(oldRecipe.Spirit, newRecipe.Spirit) {
     spirits = true
   }
 
