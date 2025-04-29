@@ -104,10 +104,11 @@ func DeleteRecipe(db *sql.DB, recipe_id int) error {
 }
 
 func EditRecipe(db *sql.DB, newRecipe *models.Recipe) error {
-	oldRecipe, err := readRecipeByID(db, newRecipe.Index)
+	oldRecipe, err := ReadRecipe(db, newRecipe.Index)
 	if err != nil {
 		return err
 	}
+
 	recipe, ingredients, instructions, spirits := false, false, false, false
 	if reflect.DeepEqual(oldRecipe, newRecipe) {
 		return nil
