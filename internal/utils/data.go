@@ -64,6 +64,6 @@ func GetUniqueSpirits(db *sql.DB) ([]string, error) {
   return db_interactions.ReadSpirits(db) 
 }
 
-func EditRecipe(db *sql.DB, newRecipe *models.Recipe, recipe bool, ingredients bool, instructions bool, spirits bool) error {
-  return db_interactions.EditRecipe(db, newRecipe, recipe, ingredients, ingredients, spirits) 
+func EditRecipe(db *sql.DB, newRecipe *models.Recipe) error {
+  return db_interactions.EditRecipe(db, newRecipe) 
 }

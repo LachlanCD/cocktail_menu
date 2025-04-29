@@ -3,6 +3,7 @@ package db_interactions
 import (
 	"database/sql"
 	"log"
+	"reflect"
 
 	_ "modernc.org/sqlite"
 
@@ -17,31 +18,31 @@ func InitDB() *sql.DB {
 		log.Fatal(err)
 	}
 
-  enablePragma(db)
+	enablePragma(db)
 
 	createTables(db)
 
 	return db
 }
 
-func ReadSpirits(db *sql.DB) ([]string, error){
-  return readUniqueSpirits(db)
+func ReadSpirits(db *sql.DB) ([]string, error) {
+	return readUniqueSpirits(db)
 }
 
 func ReadHomePageData(db *sql.DB, filterType string, filter string) (*[]models.HomePageRecipes, error) {
 	var recipeCollection []models.HomePageRecipes
-  var recipes []*models.HomePageRecipes
-  var err error
+	var recipes []*models.HomePageRecipes
+	var err error
 	recipesMap := make(map[int]*models.HomePageRecipes)
 
-  switch filterType {
-    case "spirit":
-	    recipes, err = filterSpirits(db, filter)
-    case "search":
-	    recipes, err = searchRecipes(db, filter)
-    default:
-	    recipes, err = readHomeRecipes(db)
-  }
+	switch filterType {
+	case "spirit":
+		recipes, err = filterSpirits(db, filter)
+	case "search":
+		recipes, err = searchRecipes(db, filter)
+	default:
+		recipes, err = readHomeRecipes(db)
+	}
 
 	if err != nil {
 		return nil, err
@@ -99,12 +100,31 @@ func AddNewRecipe(db *sql.DB, recipe *models.NewRecipe) (int, error) {
 }
 
 func DeleteRecipe(db *sql.DB, recipe_id int) error {
-	if err := deleteRecipeFromDB(db, recipe_id); err != nil {
-		return err
-	}
-	return nil
+	return deleteRecipeFromDB(db, recipe_id)
 }
 
-func EditRecipe(db *sql.DB, newRecipe *models.Recipe, recipe bool, ingredients bool, instructions bool, spirits bool) error {
-  return editRecipe(db, newRecipe, recipe, ingredients, ingredients, spirits) 
+func EditRecipe(db *sql.DB, newRecipe *models.Recipe) error {
+	oldRecipe, err := readRecipeByID(db, newRecipe.Index)
+	if err != nil {
+		return err
+	}
+	recipe, ingredients, instructions, spirits := false, false, false, false
+	if reflect.DeepEqual(oldRecipe, newRecipe) {
+		return nil
+	}
+
+  if (oldRecipe.Name != newRecipe.Name || oldRecipe.Source != newRecipe.Source) {
+    recipe = true
+  }
+  if reflect.DeepEqual(oldRecipe.Ingredients, newRecipe.Ingredients) {
+    ingredients = true
+  }
+  if reflect.DeepEqual(oldRecipe.Instructions, newRecipe.Instructions) {
+    instructions = true
+  }
+  if reflect.DeepEqual(oldRecipe.Spirit, newRecipe.Spirit) {
+    spirits = true
+  }
+
+	return editRecipe(db, newRecipe, recipe, ingredients, instructions, spirits)
 }
