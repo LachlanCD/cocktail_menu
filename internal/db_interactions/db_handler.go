@@ -104,3 +104,7 @@ func DeleteRecipe(db *sql.DB, recipe_id int) error {
 	}
 	return nil
 }
+
+func EditRecipe(db *sql.DB, newRecipe *models.Recipe, recipe bool, ingredients bool, instructions bool, spirits bool) error {
+  return editRecipe(db, newRecipe, recipe, ingredients, ingredients, spirits) 
+}
