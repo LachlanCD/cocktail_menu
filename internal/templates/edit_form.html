@@ -8,11 +8,23 @@
 
         <h3 class="mt-1">Ingredients</h3>
         <div id="ingredients">
-          {{ range .Ingredients }} 
+          {{ range $i, $igedient := .Ingredients }} 
+            {{if eq $i 0}}
             <div class="flex mb-2">
               <input name="ingredient_name" placeholder="Name" required  class="border border-gray-300 rounded px-4 py-2 w-1/2 mr-2" value="{{.Name}}"/>
               <input name="ingredient_quantity" placeholder="Quantity" required class="border border-gray-300 rounded px-4 py-2 w-1/2" value="{{.Quantity}}"/>
             </div>
+            {{else}}
+              <div class="flex mb-2 content-center">
+                <input name="ingredient_name" placeholder="Name" required  class="border border-gray-300 rounded px-4 py-2 w-[164px] mr-2" value="{{.Name}}"/>
+                <input name="ingredient_quantity" placeholder="Quantity" required class="border border-gray-300 rounded px-4 py-2 w-[120px] mr-2" value="{{.Quantity}}"/>
+                <button type="button" onclick="this.parentElement.remove()" class="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition h-[40px]">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="white">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0a2 2 0 00-2-2H9a2 2 0 00-2 2m10 0H5" />
+                  </svg>
+                </button>
+              </div>
+            {{end}}
           {{ end }}
         </div>
 
@@ -28,10 +40,21 @@
 
         <h3 class="mt-4">Instructions</h3>
         <div id="instructions">
-          {{ range .Instructions }}
-          <div class="mb-2">
-            <input name="instruction" placeholder="Step" required class="border border-gray-300 rounded px-4 py-2 w-full" value="{{.}}"/>
-          </div>
+          {{ range $i, $instruction := .Instructions }}
+            {{if eq $i 0}}
+              <div class="mb-2">
+                <input name="instruction" placeholder="Step" required class="border border-gray-300 rounded px-4 py-2 w-full" value="{{.}}"/>
+              </div>
+            {{else}}
+              <div class="flex mb-2 content-center">
+                <input name="instruction" placeholder="Step" class="border border-gray-300 rounded px-3 py-2 mr-1 w-[293px]" value="{{.}}"/>
+                <button type="button" onclick="this.parentElement.remove()" class="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="white">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0a2 2 0 00-2-2H9a2 2 0 00-2 2m10 0H5" />
+                  </svg>
+                </button>
+              </div>
+            {{end}}
           {{ end }}
         </div>
 
@@ -47,10 +70,21 @@
 
         <h3 class="mt-4">Base Spirits</h3>
         <div id="spirits">
-          {{ range .Spirit }}
-          <div class="flex mb-2">
-            <input name="spirit" placeholder="Name" required class="border border-gray-300 rounded px-4 py-2 w-full" value="{{.}}"/>
-          </div>
+          {{ range $i, $s := .Spirit }}
+            {{if eq $i 0}}
+              <div class="flex mb-2">
+                <input name="spirit" placeholder="Name" required class="border border-gray-300 rounded px-4 py-2 w-full" value="{{.}}"/>
+              </div>
+            {{else}}
+              <div class="flex mb-2 content-center">
+                <input name="spirit" placeholder="Name" required class="border border-gray-300 rounded px-3 py-2 mr-1 w-[293px]" value="{{.}}"/>
+                <button type="button" onclick="this.parentElement.remove()" class="px-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="white">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m2 0a2 2 0 00-2-2H9a2 2 0 00-2 2m10 0H5" />
+                  </svg>
+                </button>
+              </div>
+            {{end}}
           {{ end }}
         </div>
 
