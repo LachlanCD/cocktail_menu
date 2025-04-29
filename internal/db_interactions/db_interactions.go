@@ -443,7 +443,7 @@ func editRecipe(db *sql.DB, newRecipe *models.Recipe, recipe bool, ingredients b
 }
 
 func updateRecipe(tx *sql.Tx, recipe_id int, name string, source string) error {
-	query := "update recipes set name=? source=? where id=?"
+	query := "UPDATE recipes SET name=?, source=? WHERE id=?"
 	_, err := tx.Exec(query, name, source, recipe_id)
 	return err
 }
