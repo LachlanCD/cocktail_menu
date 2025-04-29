@@ -1,0 +1,74 @@
+{{ define "content" }}
+  <div class="flex justify-center">
+  <div class="bg-white p-6 rounded-lg w-96 max-w-full">
+    <h2 class="text-xl font-semibold mb-4">Add a New Recipe</h2>
+      <form hx-post="edit-recipe/{{.Index}}" hx-target="#page-body" hx-swap="innerHTML">
+        <label class="block mb-1">Name: <input type="text" name="name" required class="border border-gray-300 rounded px-4 py-2 mb-4 w-full" value="{{.Name}}"/></label>
+        <label class="block mb-1">Source: <input type="text" name="source" required class="border border-gray-300 rounded px-4 py-2 mb-4 w-full" value="{{.Source}}"/></label>
+
+        <h3 class="mt-1">Ingredients</h3>
+        <div id="ingredients">
+          {{ range .Ingredients }} 
+            <div class="flex mb-2">
+              <input name="ingredient_name" placeholder="Name" required  class="border border-gray-300 rounded px-4 py-2 w-1/2 mr-2" value="{{.Name}}"/>
+              <input name="ingredient_quantity" placeholder="Quantity" required class="border border-gray-300 rounded px-4 py-2 w-1/2" value="{{.Quantity}}"/>
+            </div>
+          {{ end }}
+        </div>
+
+        <button 
+          type="button" 
+          hx-get="/add-ingredient-field" 
+          hx-target="#ingredients" 
+          hx-swap="beforeend"
+          class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+        >
+          Add Ingredient
+        </button>
+
+        <h3 class="mt-4">Instructions</h3>
+        <div id="instructions">
+          {{ range .Instructions }}
+          <div class="mb-2">
+            <input name="instruction" placeholder="Step" required class="border border-gray-300 rounded px-4 py-2 w-full" value="{{.}}"/>
+          </div>
+          {{ end }}
+        </div>
+
+        <button 
+          type="button" 
+          hx-get="/add-instruction-field" 
+          hx-target="#instructions" 
+          hx-swap="beforeend"
+          class="bg-blue-700 text-white px-4 py-2 font-bold rounded mt-2 hover:bg-blue-900"
+        >
+          Add Instruction
+        </button>
+
+        <h3>Base Spirits</h3>
+        <div id="spirits">
+          {{ range .Spirit }}
+          <div class="flex mb-2">
+            <input name="spirit" placeholder="Name" required class="border border-gray-300 rounded px-4 py-2 w-full" value="{{.}}"/>
+          </div>
+          {{ end }}
+        </div>
+
+        <button 
+          type="button" 
+          hx-get="/add-spirit-field" 
+          hx-target="#spirits" 
+          hx-swap="beforeend"
+          class="bg-blue-700 text-white px-4 py-2 font-bold rounded mt-2 hover:bg-blue-900"
+        >
+          Add Spirit
+        </button>
+
+        <br><br>
+        <button type="submit" class="bg-blue-700 text-white font-bold px-4 py-2 rounded hover:bg-blue-900"> Save Changes</button>
+      </form>
+
+    <button href="/recipe/{{.Index}}" hx-get="recipe/{{.Index}}" hx-target="#page-body" hx-swap="innerHTML" class="bg-red-700 text-white px-4 py-2 font-bold rounded mt-4 hover:bg-red-900">Cancel</button>
+  </div>
+  </div>
+{{ end }}

@@ -1,0 +1,13 @@
+{{ define "edit_button" }}
+<div class="flex justify-center">
+  <a href="/edit-recipe-form/{{.Index}}"
+    hx-get="edit-recipe-form/{{.Index}}" 
+    hx-target="#page-body" 
+    hx-swap="innerHTML"
+  >  
+    <div class="px-8 py-4">
+      <div class="font-bold text-xl mb-2">X</div>
+    </div>
+  </a>
+</div>
+{{ end }}

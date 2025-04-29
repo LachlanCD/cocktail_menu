@@ -8,16 +8,7 @@ import (
 	"github.com/lachlancd/cocktail_menu/internal/utils"
 )
 
-func (h *Handlers) GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
-
-	templ := template.Must(template.ParseFiles(
-		"internal/templates/index.html",
-		"internal/templates/nav.html", 
-		"internal/templates/add_form.html",
-		"internal/templates/recipe.html",
-		"internal/templates/remove_button.html",
-		"internal/templates/edit_button.html",
-    ))
+func (h *Handlers) EditRecipeFormHandler(w http.ResponseWriter, r *http.Request) {
 
   id, err := strconv.Atoi(r.PathValue("id"))
   if err != nil {
@@ -30,6 +21,12 @@ func (h *Handlers) GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
     http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
+
+	templ := template.Must(template.ParseFiles(
+		"internal/templates/index.html",
+		"internal/templates/nav.html", 
+		"internal/templates/edit_form.html",
+    ))
 
 	if r.Header.Get("HX-Request") != "" {
 		err := templ.ExecuteTemplate(w, "content", recipe)
@@ -44,5 +41,5 @@ func (h *Handlers) GetRecipeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Could not load recipe page", http.StatusInternalServerError)
 		return
 	}
-
 }
+

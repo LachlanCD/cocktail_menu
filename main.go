@@ -29,6 +29,8 @@ func main() {
 	http.HandleFunc("/recipe/{id}", h.GetRecipeHandler)
 	http.HandleFunc("/add-recipe", h.AddRecipeHandler)
   http.HandleFunc("/remove-recipe/{id}", h.RemoveRecipeHandler)
+  http.HandleFunc("/edit-recipe-form/{id}", h.EditRecipeFormHandler)
+  http.HandleFunc("/edit-recipe/{id}", h.EditRecipeResponseHandler)
 	http.HandleFunc("/add-ingredient-field", handlers.AddIngredientFieldHandler)
 	http.HandleFunc("/add-instruction-field", handlers.AddInstructionFieldHandler)
 	http.HandleFunc("/add-spirit-field", handlers.AddSpiritFieldHandler)
