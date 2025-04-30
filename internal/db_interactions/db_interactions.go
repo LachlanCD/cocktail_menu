@@ -231,7 +231,7 @@ func filterSpirits(db *sql.DB, spirit string) ([]*models.HomePageRecipes, error)
 }
 
 func searchRecipes(db *sql.DB, search string) ([]*models.HomePageRecipes, error) {
-	searchPattern := search + "%"
+	searchPattern := "%" + search + "%"
 	inputPtr := &searchPattern
 	query := "SELECT id, name FROM recipes WHERE name LIKE ?"
 	return processHomeRecipies(db, query, inputPtr)
