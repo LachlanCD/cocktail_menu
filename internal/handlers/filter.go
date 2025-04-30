@@ -15,6 +15,7 @@ func (h *Handlers) GetFilteredSpiritsHandler(w http.ResponseWriter, r *http.Requ
 		"internal/templates/add_form.html",
 		"internal/templates/dropdown.html",
 		"internal/templates/searchbar.html",
+		"internal/templates/random_button.html",
 		"internal/templates/home.html"))
 
   spirit := r.PathValue("spirit")
@@ -25,6 +26,8 @@ func (h *Handlers) GetFilteredSpiritsHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+  randId := getRandomId(recipes)
+
   spirits, err := utils.GetUniqueSpirits(h.DB)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -32,6 +35,7 @@ func (h *Handlers) GetFilteredSpiritsHandler(w http.ResponseWriter, r *http.Requ
 	}
 
   data := &models.HomePageData{
+    RandomId: randId,
     Spirits: spirits,
     Recipes: *recipes,
   }

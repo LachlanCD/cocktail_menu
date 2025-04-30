@@ -29,6 +29,7 @@ type HomePageRecipes struct {
 }
 
 type HomePageData struct {
+  RandomId int
   Spirits []string
   Recipes []HomePageRecipes
 }

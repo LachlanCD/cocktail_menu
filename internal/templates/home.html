@@ -2,9 +2,13 @@
 <div class="flex justify-center">
   <div class="p-6 flex flex-wrap gap-4 w-full justify-center max-w-[1350px]">
 
-    {{ template "search_bar" . }}
-
-    {{ template "dropdown". }}
+      {{ template "search_bar" . }}
+    <div class="w-full flex justify-center">
+      <div class="w-[250px] flex justify-center">
+      {{ template "dropdown". }}
+      {{ template "random". }}
+      </div>
+    </div>
 
     <div class="w-full md:w-1/3 lg:w-1/4 xl:w-1/5">
       {{ template "add_form". }}

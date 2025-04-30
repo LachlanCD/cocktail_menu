@@ -20,6 +20,7 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 		"internal/templates/add_form.html",
 		"internal/templates/dropdown.html",
 		"internal/templates/searchbar.html",
+		"internal/templates/random_button.html",
 		"internal/templates/home.html"))
 
 	recipes, err := utils.GetHomePageData(h.DB)
@@ -28,6 +29,8 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+  randId := getRandomId(recipes)
+
   spirits, err := utils.GetUniqueSpirits(h.DB)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -35,6 +38,7 @@ func (h *Handlers) GetHomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
   data := &models.HomePageData{
+    RandomId: randId,
     Spirits: spirits,
     Recipes: *recipes,
   }
