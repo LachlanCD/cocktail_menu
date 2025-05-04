@@ -11,8 +11,8 @@
   </a>
 </div>
 
-<div id="popup" class="fixed inset-0 bg-black/25 flex justify-center items-center z-50" style="display:none;">
-  <div class="bg-white p-6 rounded-lg w-96 max-w-full">
+<div id="popup" class="absolute top-0 left-0 w-full min-h-screen bg-black/25 z-50 flex justify-center items-start py-10 px-4" style="display:none;">
+  <div class="bg-white p-6 rounded-lg w-full max-w-md overflow-y-auto max-h-[90vh] shadow-xl">
     <h2 class="text-xl font-semibold mb-4">Add a New Recipe</h2>
     <form 
       id="new-form"
@@ -81,17 +81,19 @@
 
     <button class="bg-red-500 text-white px-4 py-2 font-bold rounded mt-4 hover:bg-red-700" onclick="closePopUp()">Close</button>
   </div>
-</div>
+  </div>
 
 <script>
   // Function to show the popup
   function showPopUp() {
     document.getElementById('popup').style.display = 'flex';
+    document.body.classList.add('overflow-hidden');
   }
 
   // Function to close the popup
   function closePopUp() {
     document.getElementById('popup').style.display = 'none';
+    document.body.classList.remove('overflow-hidden');
   }
 </script>
 {{ end }}
