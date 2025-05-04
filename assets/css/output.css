@@ -261,6 +261,9 @@
   .block {
     display: block;
   }
+  .contents {
+    display: contents;
+  }
   .flex {
     display: flex;
   }
@@ -303,8 +306,8 @@
   .min-h-18 {
     min-height: calc(var(--spacing) * 18);
   }
-  .min-h-\[136px\] {
-    min-height: 136px;
+  .min-h-\[132px\] {
+    min-height: 132px;
   }
   .min-h-screen {
     min-height: 100vh;
