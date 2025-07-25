@@ -5,7 +5,7 @@ import (
 	"log"
 	"reflect"
 
-	_ "modernc.org/sqlite"
+	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/lachlancd/cocktail_menu/internal/models"
 )
@@ -114,18 +114,18 @@ func EditRecipe(db *sql.DB, newRecipe *models.Recipe) error {
 		return nil
 	}
 
-  if (oldRecipe.Name != newRecipe.Name || oldRecipe.Source != newRecipe.Source) {
-    recipe = true
-  }
-  if !reflect.DeepEqual(oldRecipe.Ingredients, newRecipe.Ingredients) {
-    ingredients = true
-  }
-  if !reflect.DeepEqual(oldRecipe.Instructions, newRecipe.Instructions) {
-    instructions = true
-  }
-  if !reflect.DeepEqual(oldRecipe.Spirit, newRecipe.Spirit) {
-    spirits = true
-  }
+	if oldRecipe.Name != newRecipe.Name || oldRecipe.Source != newRecipe.Source {
+		recipe = true
+	}
+	if !reflect.DeepEqual(oldRecipe.Ingredients, newRecipe.Ingredients) {
+		ingredients = true
+	}
+	if !reflect.DeepEqual(oldRecipe.Instructions, newRecipe.Instructions) {
+		instructions = true
+	}
+	if !reflect.DeepEqual(oldRecipe.Spirit, newRecipe.Spirit) {
+		spirits = true
+	}
 
 	return editRecipe(db, newRecipe, recipe, ingredients, instructions, spirits)
 }
