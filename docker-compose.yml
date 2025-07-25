@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    container_name: go_web_app
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./data:/app/data    # Persist SQLite DB outside the container
+    restart: unless-stopped
+
